@@ -55,7 +55,7 @@ export default function ComponentsDemo() {
                 <Typography color="primary">Primary</Typography>
                 <Typography color="success">Success</Typography>
                 <Typography color="warning">Warning</Typography>
-                <Typography color="error">Error</Typography>
+                <Typography color="danger">Error</Typography>
               </View>
             </View>
           </Card>
@@ -145,7 +145,7 @@ export default function ComponentsDemo() {
                 <Badge variant="primary">Primary</Badge>
                 <Badge variant="success">Success</Badge>
                 <Badge variant="warning">Warning</Badge>
-                <Badge variant="error">Error</Badge>
+                <Badge variant="danger">Error</Badge>
                 <Badge variant="outline">Outline</Badge>
               </View>
 

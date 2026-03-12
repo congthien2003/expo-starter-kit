@@ -3,10 +3,10 @@ import {
 	TextInput as RNTextInput,
 	TextInputProps as RNTextInputProps,
 	View,
-	Text,
 	TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Typography } from "./typography";
 
 interface InputProps extends RNTextInputProps {
 	label?: string;
@@ -33,35 +33,35 @@ export const Input: React.FC<InputProps> = ({
 	const [showPassword, setShowPassword] = useState(false);
 
 	const getBorderColor = () => {
-		if (error) return "border-error-500";
+		if (error) return "border-danger-500";
 		if (isFocused) return "border-primary-500";
-		return "border-secondary-300";
+		return "border-neutral-200";
 	};
 
 	const getBackgroundColor = () => {
-		if (disabled) return "bg-secondary-100";
+		if (disabled) return "bg-neutral-100";
 		return "bg-white";
 	};
 
 	return (
 		<View className="w-full">
 			{label && (
-				<Text className="text-sm font-medium text-secondary-700 mb-1.5">
+				<Typography variant="label" className="mb-1.5">
 					{label}
-				</Text>
+				</Typography>
 			)}
 			<View
 				className={`
           flex-row items-center
-          border rounded-lg px-3
+          border rounded-md px-3
           ${getBorderColor()}
           ${getBackgroundColor()}
         `}>
 				{leftIcon && <View className="mr-2">{leftIcon}</View>}
 				<RNTextInput
 					className={`
-            flex-1 py-3 text-base text-secondary-900
-            ${disabled ? "text-secondary-400" : ""}
+            flex-1 py-3 text-base text-neutral-900
+            ${disabled ? "text-neutral-400" : ""}
           `}
 					placeholderTextColor="#94a3b8"
 					editable={!disabled}
@@ -83,9 +83,9 @@ export const Input: React.FC<InputProps> = ({
 				)}
 				{rightIcon && !isPassword && <View className="ml-2">{rightIcon}</View>}
 			</View>
-			{error && <Text className="text-xs text-error-500 mt-1">{error}</Text>}
+			{error && <Typography variant="caption" color="danger" className="mt-1">{error}</Typography>}
 			{hint && !error && (
-				<Text className="text-xs text-secondary-500 mt-1">{hint}</Text>
+				<Typography variant="caption" color="muted" className="mt-1">{hint}</Typography>
 			)}
 		</View>
 	);

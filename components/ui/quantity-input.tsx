@@ -1,6 +1,7 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Typography } from "./typography";
 
 interface QuantityInputProps {
 	value: number;
@@ -40,7 +41,7 @@ export const QuantityInput: React.FC<QuantityInputProps> = ({
 				className={`w-8 h-8 rounded-full items-center justify-center ${
 					canDecrement
 						? "bg-primary-100 active:bg-primary-200"
-						: "bg-secondary-100"
+						: "bg-neutral-100"
 				}`}>
 				<Ionicons
 					name="remove"
@@ -49,9 +50,9 @@ export const QuantityInput: React.FC<QuantityInputProps> = ({
 				/>
 			</TouchableOpacity>
 
-			<Text className="mx-4 text-lg font-semibold text-secondary-900 min-w-[30px] text-center">
+			<Typography variant="h4" className="mx-4 min-w-[30px] text-center" align="center">
 				{value}
-			</Text>
+			</Typography>
 
 			<TouchableOpacity
 				onPress={handleIncrement}
@@ -59,7 +60,7 @@ export const QuantityInput: React.FC<QuantityInputProps> = ({
 				className={`w-8 h-8 rounded-full items-center justify-center ${
 					canIncrement
 						? "bg-primary-100 active:bg-primary-200"
-						: "bg-secondary-100"
+						: "bg-neutral-100"
 				}`}>
 				<Ionicons
 					name="add"

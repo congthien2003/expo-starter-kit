@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, TextProps, TextStyle } from "react-native";
+import { Text, TextProps, StyleSheet } from "react-native";
+import { s } from "react-native-size-matters";
 
 type TypographyVariant =
 	| "h1"
@@ -17,7 +18,7 @@ type TypographyColor =
 	| "primary"
 	| "success"
 	| "warning"
-	| "error"
+	| "danger"
 	| "white";
 
 interface TypographyProps extends TextProps {
@@ -28,62 +29,75 @@ interface TypographyProps extends TextProps {
 	children: React.ReactNode;
 }
 
-const getVariantStyles = (variant: TypographyVariant): string => {
+const getVariantSize = (variant: TypographyVariant): number => {
 	switch (variant) {
 		case "h1":
-			return "text-3xl font-bold";
+			return s(30); // ~ text-3xl
 		case "h2":
-			return "text-2xl font-bold";
+			return s(24); // ~ text-2xl
 		case "h3":
-			return "text-xl font-semibold";
+			return s(20); // ~ text-xl
 		case "h4":
-			return "text-lg font-semibold";
+			return s(18); // ~ text-lg
 		case "body":
-			return "text-base";
+			return s(16); // ~ text-base
 		case "body-sm":
-			return "text-sm";
+			return s(14); // ~ text-sm
 		case "caption":
-			return "text-xs";
+			return s(12); // ~ text-xs
 		case "label":
-			return "text-sm font-medium";
+			return s(14); // ~ text-sm
 		default:
-			return "text-base";
+			return s(16);
 	}
 };
 
 const getColorStyles = (color: TypographyColor): string => {
 	switch (color) {
 		case "default":
-			return "text-secondary-900";
+			return "text-neutral-900";
 		case "muted":
-			return "text-secondary-500";
+			return "text-neutral-500";
 		case "primary":
 			return "text-primary-600";
 		case "success":
-			return "text-success-600";
+			return "text-success-500";
 		case "warning":
-			return "text-warning-600";
-		case "error":
-			return "text-error-600";
+			return "text-warning-500";
+		case "danger":
+			return "text-danger-500";
 		case "white":
 			return "text-white";
 		default:
-			return "text-secondary-900";
+			return "text-neutral-900";
 	}
 };
 
-const getWeightStyles = (weight: TypographyProps["weight"]): string => {
-	switch (weight) {
-		case "normal":
-			return "font-normal";
-		case "medium":
-			return "font-medium";
-		case "semibold":
-			return "font-semibold";
-		case "bold":
+const getWeightStyles = (weight: TypographyProps["weight"], variant: TypographyVariant): string => {
+	if (weight) {
+		switch (weight) {
+			case "normal":
+				return "font-normal";
+			case "medium":
+				return "font-medium";
+			case "semibold":
+				return "font-semibold";
+			case "bold":
+				return "font-bold";
+		}
+	}
+	// Fallback to variant defaults
+	switch (variant) {
+		case "h1":
+		case "h2":
 			return "font-bold";
+		case "h3":
+		case "h4":
+			return "font-semibold";
+		case "label":
+			return "font-medium";
 		default:
-			return "";
+			return "font-normal";
 	}
 };
 
@@ -107,16 +121,18 @@ export const Typography: React.FC<TypographyProps> = ({
 	align,
 	children,
 	className,
+	style,
 	...props
 }) => {
-	const variantStyles = getVariantStyles(variant);
+	const fontSize = getVariantSize(variant);
 	const colorStyles = getColorStyles(color);
-	const weightStyles = weight ? getWeightStyles(weight) : "";
+	const weightStyles = getWeightStyles(weight, variant);
 	const alignStyles = align ? getAlignStyles(align) : "";
 
 	return (
 		<Text
-			className={`${variantStyles} ${colorStyles} ${weightStyles} ${alignStyles} ${className || ""}`}
+			className={`${colorStyles} ${weightStyles} ${alignStyles} ${className || ""}`}
+			style={[style, { fontSize }]}
 			{...props}>
 			{children}
 		</Text>

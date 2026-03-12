@@ -2,10 +2,10 @@ import React from "react";
 import {
 	TouchableOpacity,
 	TouchableOpacityProps,
-	Text,
 	ActivityIndicator,
 	View,
 } from "react-native";
+import { Typography } from "./typography";
 
 type ButtonVariant =
 	| "primary"
@@ -27,47 +27,45 @@ interface ButtonProps extends TouchableOpacityProps {
 }
 
 const getVariantStyles = (variant: ButtonVariant, disabled: boolean) => {
-	const baseStyles = {
-		container: "",
-		text: "",
-	};
-
 	if (disabled) {
 		return {
-			container: "bg-secondary-200",
-			text: "text-secondary-400",
+			container: "bg-neutral-200",
+			textType: "muted" as const,
 		};
 	}
 
 	switch (variant) {
 		case "primary":
 			return {
-				container: "bg-primary-600 active:bg-primary-700",
-				text: "text-white",
+				container: "bg-primary-500 active:bg-primary-600",
+				textType: "white" as const,
 			};
 		case "secondary":
 			return {
-				container: "bg-secondary-100 active:bg-secondary-200",
-				text: "text-secondary-900",
+				container: "bg-neutral-100 active:bg-neutral-200",
+				textType: "default" as const,
 			};
 		case "outline":
 			return {
 				container:
-					"border border-primary-600 bg-transparent active:bg-primary-50",
-				text: "text-primary-600",
+					"border border-primary-500 bg-transparent active:bg-primary-50",
+				textType: "primary" as const,
 			};
 		case "ghost":
 			return {
-				container: "bg-transparent active:bg-secondary-100",
-				text: "text-secondary-700",
+				container: "bg-transparent active:bg-neutral-100",
+				textType: "default" as const,
 			};
 		case "destructive":
 			return {
-				container: "bg-error-500 active:bg-error-600",
-				text: "text-white",
+				container: "bg-danger-500 active:bg-danger-600",
+				textType: "white" as const,
 			};
 		default:
-			return baseStyles;
+			return {
+				container: "",
+				textType: "default" as const,
+			};
 	}
 };
 
@@ -76,22 +74,22 @@ const getSizeStyles = (size: ButtonSize) => {
 		case "sm":
 			return {
 				container: "px-3 py-2 rounded-md",
-				text: "text-sm",
+				textVariant: "body-sm" as const,
 			};
 		case "md":
 			return {
-				container: "px-4 py-3 rounded-lg",
-				text: "text-base",
+				container: "px-4 py-3 rounded-md",
+				textVariant: "body" as const,
 			};
 		case "lg":
 			return {
 				container: "px-6 py-4 rounded-xl",
-				text: "text-lg",
+				textVariant: "h4" as const,
 			};
 		default:
 			return {
-				container: "px-4 py-3 rounded-lg",
-				text: "text-base",
+				container: "px-4 py-3 rounded-md",
+				textVariant: "body" as const,
 			};
 	}
 };
@@ -134,10 +132,12 @@ export const Button: React.FC<ButtonProps> = ({
 			) : (
 				<View className="flex-row items-center gap-2">
 					{leftIcon}
-					<Text
-						className={`font-semibold ${variantStyles.text} ${sizeStyles.text}`}>
+					<Typography
+						variant={sizeStyles.textVariant}
+						color={variantStyles.textType}
+						weight="semibold">
 						{children}
-					</Text>
+					</Typography>
 					{rightIcon}
 				</View>
 			)}

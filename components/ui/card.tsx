@@ -23,9 +23,9 @@ const getVariantStyles = (variant: CardProps["variant"]) => {
 		case "elevated":
 			return "bg-white shadow-md shadow-black/10";
 		case "outlined":
-			return "bg-white border border-secondary-200";
+			return "bg-white border border-neutral-200";
 		case "filled":
-			return "bg-secondary-50";
+			return "bg-neutral-100";
 		default:
 			return "bg-white shadow-sm shadow-black/5";
 	}

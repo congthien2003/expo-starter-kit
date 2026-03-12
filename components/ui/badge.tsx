@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
+import { Typography } from "./typography";
 
 type BadgeVariant =
 	| "default"
 	| "primary"
 	| "success"
 	| "warning"
-	| "error"
+	| "danger"
 	| "outline";
 type BadgeSize = "sm" | "md";
 
@@ -20,38 +21,38 @@ const getVariantStyles = (variant: BadgeVariant) => {
 	switch (variant) {
 		case "default":
 			return {
-				container: "bg-secondary-100",
-				text: "text-secondary-700",
+				container: "bg-neutral-100",
+				textVariantType: "default" as const,
 			};
 		case "primary":
 			return {
 				container: "bg-primary-100",
-				text: "text-primary-700",
+				textVariantType: "primary" as const,
 			};
 		case "success":
 			return {
-				container: "bg-success-50",
-				text: "text-success-600",
+				container: "bg-success-100",
+				textVariantType: "success" as const,
 			};
 		case "warning":
 			return {
-				container: "bg-warning-50",
-				text: "text-warning-600",
+				container: "bg-warning-100",
+				textVariantType: "warning" as const,
 			};
-		case "error":
+		case "danger":
 			return {
-				container: "bg-error-50",
-				text: "text-error-600",
+				container: "bg-danger-100",
+				textVariantType: "danger" as const,
 			};
 		case "outline":
 			return {
-				container: "bg-transparent border border-secondary-300",
-				text: "text-secondary-700",
+				container: "bg-transparent border border-neutral-200",
+				textVariantType: "default" as const,
 			};
 		default:
 			return {
-				container: "bg-secondary-100",
-				text: "text-secondary-700",
+				container: "bg-neutral-100",
+				textVariantType: "default" as const,
 			};
 	}
 };
@@ -60,18 +61,18 @@ const getSizeStyles = (size: BadgeSize) => {
 	switch (size) {
 		case "sm":
 			return {
-				container: "px-2 py-0.5 rounded",
-				text: "text-xs",
+				container: "px-2 py-0.5 rounded-sm",
+				textVariantDef: "caption" as const,
 			};
 		case "md":
 			return {
 				container: "px-2.5 py-1 rounded-md",
-				text: "text-sm",
+				textVariantDef: "body-sm" as const,
 			};
 		default:
 			return {
 				container: "px-2.5 py-1 rounded-md",
-				text: "text-sm",
+				textVariantDef: "body-sm" as const,
 			};
 	}
 };
@@ -87,9 +88,13 @@ export const Badge: React.FC<BadgeProps> = ({
 	return (
 		<View
 			className={`self-start ${variantStyles.container} ${sizeStyles.container}`}>
-			<Text className={`font-medium ${variantStyles.text} ${sizeStyles.text}`}>
+			<Typography 
+				variant={sizeStyles.textVariantDef} 
+				color={variantStyles.textVariantType} 
+				weight="medium"
+			>
 				{children}
-			</Text>
+			</Typography>
 		</View>
 	);
 };

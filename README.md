@@ -1,50 +1,215 @@
-# Welcome to your Expo app 👋
+# 🚀 Expo Starter Kit
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A **production-ready** Expo starter kit with a pre-configured design system, responsive typography, reusable UI components, auth patterns, and push notification setup. Built for teams that want to ship fast without sacrificing quality.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
 
-   ```bash
-   npm install
-   ```
+| Feature | Details |
+|---------|---------|
+| 🎨 **Design System** | Tailwind / NativeWind with branded color palette (`primary`, `neutral`, `success`, `warning`, `danger`) |
+| 📐 **Responsive Typography** | `react-native-size-matters` — all font sizes scale proportionally across screen sizes |
+| 🧩 **Shared UI Components** | Button, Input, Badge, Card, Typography, QuantityInput, Loading, EmptyState, Collapsible, Divider |
+| 🔔 **Push Notifications** | Full `expo-notifications` setup with permission handling, token retrieval, and context provider |
+| 🔐 **Auth Pattern** | `AuthProvider` wired up and ready for your authentication flow |
+| 🗂 **File-Based Routing** | Expo Router v6 with tabs + modal screen patterns |
+| 🛠 **Modern Stack** | React 19 · TypeScript strict · Zustand · React Hook Form + Zod |
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🧰 Tech Stack
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+Expo SDK 54         → Build system, OTA updates
+Expo Router v6      → File-based navigation
+NativeWind v4       → Tailwind CSS for React Native
+react-native-size-matters → Adaptive font & layout scaling
+expo-notifications  → Push notification handling
+Zustand             → Lightweight global state
+React Hook Form     → Form management
+Zod                 → Runtime schema validation
+Axios               → HTTP client
+FlashList           → High-performance list rendering
+expo-secure-store   → Secure token storage
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 📁 Project Structure
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+├── app/
+│   ├── (tabs)/
+│   │   ├── index.tsx          # Home screen
+│   │   ├── components-demo.tsx # UI component showcase
+│   │   └── explore.tsx
+│   ├── _layout.tsx            # Root layout with providers
+│   └── modal.tsx
+├── components/
+│   ├── ui/                    # Shared design-system components
+│   │   ├── button.tsx
+│   │   ├── badge.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   ├── typography.tsx     # Responsive Typography + size-matters
+│   │   ├── loading.tsx
+│   │   ├── empty-state.tsx
+│   │   ├── quantity-input.tsx
+│   │   ├── collapsible.tsx
+│   │   ├── divider.tsx
+│   │   ├── safe-area.tsx
+│   │   └── modal.tsx
+│   └── themed-text.tsx
+├── context/
+│   └── NotificationProvider.tsx  # Push notification context
+├── hooks/
+│   ├── usePushNotifications.ts   # Push notification hook
+│   └── use-theme-color.ts
+├── providers/
+│   └── authProvider.tsx          # Authentication context
+├── docs/
+│   └── DESIGN_GUIDELINE.md       # Design system specification
+└── tailwind.config.js            # Design token configuration
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 🎨 Design System
 
-Join our community of developers creating universal apps.
+All color tokens are defined in `tailwind.config.js` and documented in `docs/DESIGN_GUIDELINE.md`.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Color Palette
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `primary-500` | `#3b82f6` | Main brand, buttons, active states |
+| `neutral-50` | `#f8fafc` | App background |
+| `neutral-900` | `#0f172a` | Headings |
+| `neutral-800` | `#1e293b` | Body text |
+| `neutral-400` | `#94a3b8` | Placeholder, disabled |
+| `success-500` | `#22c55e` | Confirmed, completed |
+| `warning-500` | `#eab308` | Pending, caution |
+| `danger-500` | `#ef4444` | Error, cancel |
+
+### Typography
+
+Uses `react-native-size-matters` (`s()`) to scale font sizes proportionally based on device width.
+
+```tsx
+import { Heading1, Body, Caption, Typography } from "@/components/ui/typography";
+
+<Heading1>Dashboard</Heading1>
+<Body color="muted">Secondary content here</Body>
+<Caption>12px · auto-scaled</Caption>
+<Typography variant="h3" color="primary" weight="semibold">Custom</Typography>
+```
+
+### UI Components
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+
+// Button variants: primary | secondary | outline | ghost | destructive
+<Button variant="primary" size="md" onPress={...}>Submit</Button>
+
+// Input with label, error, hint, icons, password toggle
+<Input label="Email" error="Invalid email" hint="Used for login" />
+
+// Semantic badge
+<Badge variant="success">Completed</Badge>
+<Badge variant="danger">Cancelled</Badge>
+
+// Card variants: elevated | outlined | filled
+<Card variant="elevated"><Body>Card content</Body></Card>
+```
+
+---
+
+## 🔔 Push Notifications
+
+Pre-configured with `expo-notifications`. Handles permissions, token retrieval, foreground/background events.
+
+### Usage
+
+```tsx
+// The provider is already wrapped in app/_layout.tsx
+// Just consume the context anywhere in your app:
+
+import { useNotificationContext } from "@/context/NotificationProvider";
+
+export function MyScreen() {
+  const { expoPushToken, notification, permissionStatus } = useNotificationContext();
+
+  return (
+    <View>
+      <Text>Token: {expoPushToken?.data}</Text>
+      <Text>Permission: {permissionStatus}</Text>
+    </View>
+  );
+}
+```
+
+> **Note:** Push tokens only work on **physical devices**. Simulators will log a warning but won't crash.
+
+### For production push (server-side)
+
+Use the token with [Expo Push Notification API](https://docs.expo.dev/push-notifications/sending-notifications/) or FCM/APNs directly.
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Start the development server
+npx expo start
+
+# 3. Open on device
+#    → Scan QR code with Expo Go
+#    → Press 'a' for Android emulator
+#    → Press 'i' for iOS simulator
+```
+
+### Environment Setup
+
+For push notifications, add your EAS project ID in `app.json`:
+
+```json
+{
+  "extra": {
+    "eas": {
+      "projectId": "your-eas-project-id"
+    }
+  }
+}
+```
+
+---
+
+## 📦 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start Expo development server |
+| `npm run android` | Open on Android |
+| `npm run ios` | Open on iOS |
+| `npm run web` | Open in browser |
+| `npm run lint` | Run ESLint |
+| `npm run reset-project` | Reset to blank starter |
+
+---
+
+## 📖 Resources
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [NativeWind](https://www.nativewind.dev/)
+- [react-native-size-matters](https://github.com/nirsky/react-native-size-matters)
+- [expo-notifications Guide](https://docs.expo.dev/push-notifications/overview/)
+- [Design Guideline](./docs/DESIGN_GUIDELINE.md)
+

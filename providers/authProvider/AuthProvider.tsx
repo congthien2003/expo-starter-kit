@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/models/auth";
 import authService from "@/services/authService";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
 	user: User | null;
@@ -97,7 +97,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		refreshUser,
 	};
 
-	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+	return (
+		<AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+	);
 };
 
 export default AuthProvider;
