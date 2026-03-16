@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expo Starter Kit — Ship Mobile Apps Faster</title>
+    <meta
+      name="description"
+      content="Production-ready Expo starter kit with design system, auth patterns, push notifications, and 10+ UI components. Built with TypeScript, NativeWind, and Zustand." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              heading: ["JetBrains Mono", "monospace"],
+              body: ["IBM Plex Sans", "sans-serif"],
+            },
+            colors: {
+              primary: {
+                DEFAULT: "#3B82F6",
+                light: "#60A5FA",
+                dark: "#2563EB",
+              },
+              cta: { DEFAULT: "#F97316", dark: "#EA6D0A" },
+              surface: {
+                DEFAULT: "#1E293B",
+                raised: "#263348",
+                border: "#334155",
+              },
+              bg: "#0F172A",
+              muted: "#94A3B8",
+            },
+            animation: {
+              "fade-up": "fadeUp 0.6s ease forwards",
+              "fade-in": "fadeIn 0.4s ease forwards",
+              "pulse-slow": "pulse 3s ease-in-out infinite",
+              float: "float 4s ease-in-out infinite",
+            },
+            keyframes: {
+              fadeUp: {
+                "0%": { opacity: 0, transform: "translateY(24px)" },
+                "100%": { opacity: 1, transform: "translateY(0)" },
+              },
+              fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+              float: {
+                "0%,100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-8px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: "IBM Plex Sans", sans-serif;
+        background: #0f172a;
+        color: #f8fafc;
+      }
+      h1,
+      h2,
+      h3,
+      .font-heading {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(
+          135deg,
+          #60a5fa 0%,
+          #3b82f6 40%,
+          #818cf8 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .gradient-text-orange {
+        background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Glow effects */
+      .glow-blue {
+        box-shadow: 0 0 32px rgba(59, 130, 246, 0.3);
+      }
+      .glow-orange {
+        box-shadow: 0 0 32px rgba(249, 115, 22, 0.4);
+      }
+
+      /* Grid background */
+      .grid-bg {
+        background-image:
+          linear-gradient(rgba(51, 65, 85, 0.4) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(51, 65, 85, 0.4) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      /* Radial glow overlay */
+      .hero-glow {
+        background: radial-gradient(
+          ellipse 80% 60% at 50% -10%,
+          rgba(59, 130, 246, 0.18) 0%,
+          transparent 70%
+        );
+      }
+
+      /* Code block */
+      .code-block {
+        background: #0d1117;
+        border: 1px solid #21262d;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .code-line-num {
+        color: #484f58;
+        user-select: none;
+      }
+      .token-keyword {
+        color: #ff7b72;
+      }
+      .token-string {
+        color: #a5d6ff;
+      }
+      .token-comment {
+        color: #8b949e;
+      }
+      .token-fn {
+        color: #d2a8ff;
+      }
+      .token-var {
+        color: #ffa657;
+      }
+      .token-plain {
+        color: #c9d1d9;
+      }
+
+      /* Feature card hover */
+      .feature-card {
+        transition:
+          transform 150ms ease,
+          box-shadow 150ms ease,
+          border-color 150ms ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+        border-color: #3b82f6;
+      }
+
+      /* Tech badge hover */
+      .tech-badge {
+        transition:
+          background-color 200ms ease,
+          transform 150ms ease;
+      }
+      .tech-badge:hover {
+        transform: scale(1.05);
+        background-color: #263348;
+      }
+
+      /* Nav blur */
+      .nav-blur {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      /* Section reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Step connector */
+      .step-connector {
+        background: linear-gradient(180deg, #3b82f6 0%, transparent 100%);
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 3px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .feature-card:hover {
+          transform: none;
+        }
+        .tech-badge:hover {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- ========== NAVBAR ========== -->
+    <nav
+      class="nav-blur fixed top-4 left-4 right-4 z-50 rounded-xl border border-surface-border px-5 py-3 flex items-center justify-between max-w-6xl mx-auto">
+      <a
+        href="#"
+        class="flex items-center gap-2.5 group"
+        aria-label="Expo Starter Kit home">
+        <!-- Logo icon -->
+        <div
+          class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <svg
+            class="w-5 h-5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <span class="font-heading font-bold text-sm text-white"
+          >expo-starter-kit</span
+        >
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-6 text-sm text-muted">
+        <a
+          href="#features"
+          class="hover:text-white transition-colors duration-150"
+          >Features</a
+        >
+        <a href="#stack" class="hover:text-white transition-colors duration-150"
+          >Stack</a
+        >
+        <a
+          href="#components"
+          class="hover:text-white transition-colors duration-150"
+          >Components</a
+        >
+        <a
+          href="#quickstart"
+          class="hover:text-white transition-colors duration-150"
+          >Quick Start</a
+        >
+      </div>
+
+      <a
+        href="https://github.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 bg-surface-raised hover:bg-surface-border border border-surface-border text-white text-xs font-medium px-4 py-2 rounded-lg transition-colors duration-150 cursor-pointer"
+        aria-label="View on GitHub">
+        <!-- GitHub icon -->
+        <svg
+          class="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true">
+          <path
+            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+        </svg>
+        GitHub
+      </a>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section
+      class="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-24 pb-16">
+      <div
+        class="hero-glow absolute inset-0 pointer-events-none"
+        aria-hidden="true"></div>
+
+      <!-- Floating orbs -->
+      <div
+        class="absolute top-32 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow"
+        aria-hidden="true"></div>
+      <div
+        class="absolute bottom-24 right-1/4 w-48 h-48 bg-cta/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow"
+        style="animation-delay: 1.5s"
+        aria-hidden="true"></div>
+
+      <div
+        class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <!-- Badge -->
+        <div
+          class="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary-light text-xs font-medium px-3 py-1.5 rounded-full mb-6">
+          <span
+            class="w-1.5 h-1.5 bg-primary-light rounded-full inline-block animate-pulse-slow"
+            aria-hidden="true"></span>
+          Expo SDK 54 &bull; React Native &bull; TypeScript
+        </div>
+
+        <!-- Headline -->
+        <h1
+          class="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight mb-6">
+          <span class="text-white">Ship mobile apps</span><br />
+          <span class="gradient-text">10x faster.</span>
+        </h1>
+
+        <p
+          class="text-muted text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+          Production-ready Expo starter kit with a full design system, auth
+          patterns, push notifications, and 10+ UI components. Skip the
+          boilerplate — focus on your product.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <a
+            href="#quickstart"
+            class="group flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-8 py-3.5 rounded-xl transition-colors duration-150 cursor-pointer glow-blue text-sm">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2.5"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Get Started Free
+            <svg
+              class="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2.5"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 bg-transparent hover:bg-surface-raised border border-surface-border text-white font-medium px-8 py-3.5 rounded-xl transition-colors duration-150 cursor-pointer text-sm">
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true">
+              <path
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+            </svg>
+            Star on GitHub
+          </a>
+        </div>
+
+        <!-- Terminal mockup -->
+        <div
+          class="code-block rounded-xl max-w-2xl mx-auto text-left overflow-hidden shadow-2xl animate-float">
+          <!-- Terminal header -->
+          <div
+            class="flex items-center gap-2 px-4 py-3 border-b border-[#21262D] bg-[#161B22]">
+            <span
+              class="w-3 h-3 rounded-full bg-[#FF5F57]"
+              aria-hidden="true"></span>
+            <span
+              class="w-3 h-3 rounded-full bg-[#FFBD2E]"
+              aria-hidden="true"></span>
+            <span
+              class="w-3 h-3 rounded-full bg-[#28C840]"
+              aria-hidden="true"></span>
+            <span class="ml-3 text-xs text-[#484F58] font-heading"
+              >terminal</span
+            >
+          </div>
+          <!-- Code content -->
+          <div class="px-5 py-4 text-sm leading-7">
+            <div class="flex gap-4">
+              <span class="code-line-num select-none">1</span>
+              <span
+                ><span class="token-comment"
+                  ># Clone the starter kit</span
+                ></span
+              >
+            </div>
+            <div class="flex gap-4">
+              <span class="code-line-num select-none">2</span>
+              <span
+                ><span class="token-fn">npx</span>
+                <span class="token-string">create-expo-app</span>
+                <span class="token-var">my-app</span>
+                <span class="token-keyword">-t</span>
+                <span class="token-string">expo-starter-kit</span></span
+              >
+            </div>
+            <div class="flex gap-4">
+              <span class="code-line-num select-none">3</span>
+              <span></span>
+            </div>
+            <div class="flex gap-4">
+              <span class="code-line-num select-none">4</span>
+              <span
+                ><span class="token-comment"># Install &amp; run</span></span
+              >
+            </div>
+            <div class="flex gap-4">
+              <span class="code-line-num select-none">5</span>
+              <span
+                ><span class="token-fn">cd</span>
+                <span class="token-var">my-app</span>
+                <span class="token-keyword">&amp;&amp;</span>
+                <span class="token-fn">npm</span>
+                <span class="token-string">install</span></span
+              >
+            </div>
+            <div class="flex gap-4">
+              <span class="code-line-num select-none">6</span>
+              <span
+                ><span class="token-fn">npx</span>
+                <span class="token-string">expo start</span></span
+              >
+            </div>
+            <div class="flex gap-4 mt-1">
+              <span class="code-line-num select-none">7</span>
+              <span
+                ><span class="token-plain text-green-400"
+                  >✔ Server started on http://localhost:8081</span
+                ></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== STATS BAR ========== -->
+    <section
+      class="relative z-10 -mt-px border-y border-surface-border bg-surface-DEFAULT/40 backdrop-blur-sm py-10 reveal"
+      aria-label="Project statistics">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div class="flex flex-col items-center gap-1">
+            <dt class="text-3xl font-heading font-bold gradient-text">10+</dt>
+            <dd class="text-muted text-sm">UI Components</dd>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <dt class="text-3xl font-heading font-bold gradient-text">
+              SDK 54
+            </dt>
+            <dd class="text-muted text-sm">Latest Expo</dd>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <dt class="text-3xl font-heading font-bold gradient-text">
+              TypeScript
+            </dt>
+            <dd class="text-muted text-sm">Strict Mode</dd>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <dt class="text-3xl font-heading font-bold gradient-text">Zero</dt>
+            <dd class="text-muted text-sm">Config Required</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ========== FEATURES ========== -->
+    <section
+      id="features"
+      class="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto reveal">
+      <div class="text-center mb-16">
+        <p
+          class="text-primary-light text-sm font-heading font-medium tracking-widest uppercase mb-3">
+          What's Included
+        </p>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-4">
+          Everything you need,<br /><span class="gradient-text"
+            >nothing you don't.</span
+          >
+        </h2>
+        <p class="text-muted max-w-xl mx-auto text-sm sm:text-base">
+          Pre-configured, battle-tested, and ready for production from day one.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Card: Design System -->
+        <article
+          class="feature-card bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 cursor-default">
+          <div
+            class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-4">
+            <svg
+              class="w-5 h-5 text-blue-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white text-sm mb-2">
+            Design System
+          </h3>
+          <p class="text-muted text-xs leading-relaxed">
+            Tailwind / NativeWind with branded color palette —
+            <code
+              class="text-primary-light bg-primary/10 px-1.5 py-0.5 rounded text-xs"
+              >primary</code
+            >,
+            <code
+              class="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-xs"
+              >success</code
+            >,
+            <code
+              class="text-orange-400 bg-orange-500/10 px-1.5 py-0.5 rounded text-xs"
+              >warning</code
+            >, and more.
+          </p>
+        </article>
+
+        <!-- Card: Responsive Typography -->
+        <article
+          class="feature-card bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 cursor-default">
+          <div
+            class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4">
+            <svg
+              class="w-5 h-5 text-indigo-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 12h8m-8 6h16" />
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white text-sm mb-2">
+            Responsive Typography
+          </h3>
+          <p class="text-muted text-xs leading-relaxed">
+            <code
+              class="text-primary-light bg-primary/10 px-1.5 py-0.5 rounded text-xs"
+              >react-native-size-matters</code
+            >
+            — all font sizes scale proportionally across every screen size
+            automatically.
+          </p>
+        </article>
+
+        <!-- Card: Auth Pattern -->
+        <article
+          class="feature-card bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 cursor-default">
+          <div
+            class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
+            <svg
+              class="w-5 h-5 text-emerald-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white text-sm mb-2">
+            Auth Pattern
+          </h3>
+          <p class="text-muted text-xs leading-relaxed">
+            <code
+              class="text-primary-light bg-primary/10 px-1.5 py-0.5 rounded text-xs"
+              >AuthProvider</code
+            >
+            with secure token storage via
+            <code
+              class="text-primary-light bg-primary/10 px-1.5 py-0.5 rounded text-xs"
+              >expo-secure-store</code
+            >
+            — wired up and ready.
+          </p>
+        </article>
+
+        <!-- Card: Push Notifications -->
+        <article
+          class="feature-card bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 cursor-default">
+          <div
+            class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-4">
+            <svg
+              class="w-5 h-5 text-amber-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white text-sm mb-2">
+            Push Notifications
+          </h3>
+          <p class="text-muted text-xs leading-relaxed">
+            Full
+            <code
+              class="text-primary-light bg-primary/10 px-1.5 py-0.5 rounded text-xs"
+              >expo-notifications</code
+            >
+            setup with permission handling, token retrieval, foreground &amp;
+            background listeners.
+          </p>
+        </article>
+
+        <!-- Card: File-Based Routing -->
+        <article
+          class="feature-card bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 cursor-default">
+          <div
+            class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-4">
+            <svg
+              class="w-5 h-5 text-violet-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white text-sm mb-2">
+            File-Based Routing
+          </h3>
+          <p class="text-muted text-xs leading-relaxed">
+            Expo Router v6 with tabs, modal screens, and nested layouts —
+            organize your app the same way you organize your files.
+          </p>
+        </article>
+
+        <!-- Card: Modern Stack -->
+        <article
+          class="feature-card bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 cursor-default">
+          <div
+            class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-4">
+            <svg
+              class="w-5 h-5 text-rose-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white text-sm mb-2">
+            Modern Stack
+          </h3>
+          <p class="text-muted text-xs leading-relaxed">
+            React 19, TypeScript strict, Zustand, React Hook Form + Zod, Axios,
+            FlashList — everything preconfigured.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========== TECH STACK ========== -->
+    <section id="stack" class="py-20 border-t border-surface-border reveal">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <p
+            class="text-primary-light text-sm font-heading font-medium tracking-widest uppercase mb-3">
+            Tech Stack
+          </p>
+          <h2 class="font-heading text-3xl font-bold text-white">
+            Built on the <span class="gradient-text">best tools.</span>
+          </h2>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3">
+          <!-- Each badge -->
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-blue-400 inline-block"
+              aria-hidden="true"></span>
+            Expo SDK 54
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-cyan-400 inline-block"
+              aria-hidden="true"></span>
+            React Native
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-blue-600 inline-block"
+              aria-hidden="true"></span>
+            TypeScript
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-sky-400 inline-block"
+              aria-hidden="true"></span>
+            NativeWind v4
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-purple-400 inline-block"
+              aria-hidden="true"></span>
+            Expo Router v6
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-amber-400 inline-block"
+              aria-hidden="true"></span>
+            Zustand
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-rose-400 inline-block"
+              aria-hidden="true"></span>
+            React Hook Form
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-green-400 inline-block"
+              aria-hidden="true"></span>
+            Zod
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-indigo-400 inline-block"
+              aria-hidden="true"></span>
+            Axios
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-400 inline-block"
+              aria-hidden="true"></span>
+            FlashList
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-orange-400 inline-block"
+              aria-hidden="true"></span>
+            expo-notifications
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-pink-400 inline-block"
+              aria-hidden="true"></span>
+            expo-secure-store
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-violet-400 inline-block"
+              aria-hidden="true"></span>
+            size-matters
+          </span>
+          <span
+            class="tech-badge flex items-center gap-2 bg-surface-DEFAULT border border-surface-border text-white text-xs font-heading px-4 py-2.5 rounded-xl cursor-default">
+            <span
+              class="w-2 h-2 rounded-full bg-teal-400 inline-block"
+              aria-hidden="true"></span>
+            React 19
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== UI COMPONENTS SHOWCASE ========== -->
+    <section
+      id="components"
+      class="py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+      <div class="text-center mb-16">
+        <p
+          class="text-primary-light text-sm font-heading font-medium tracking-widest uppercase mb-3">
+          UI Component Library
+        </p>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-4">
+          Pre-built. <span class="gradient-text">Customizable.</span>
+        </h2>
+        <p class="text-muted max-w-xl mx-auto text-sm">
+          All components follow your design tokens and work across iOS, Android,
+          and Web.
+        </p>
+      </div>
+
+      <!-- Component grid preview -->
+      <div
+        class="bg-surface-DEFAULT border border-surface-border rounded-2xl p-8 overflow-hidden">
+        <!-- Mock phone frame content -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- Button -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-3">
+            <p class="text-muted text-xs font-heading">Button</p>
+            <button
+              type="button"
+              class="w-full bg-primary hover:bg-primary-dark text-white text-xs font-semibold py-2 px-3 rounded-lg transition-colors duration-150 cursor-pointer">
+              Primary
+            </button>
+            <button
+              type="button"
+              class="w-full bg-surface-raised hover:bg-surface-border border border-surface-border text-white text-xs font-semibold py-2 px-3 rounded-lg transition-colors duration-150 cursor-pointer">
+              Ghost
+            </button>
+          </div>
+
+          <!-- Badge -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-3">
+            <p class="text-muted text-xs font-heading">Badge</p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="inline-flex items-center bg-primary/15 text-primary-light text-xs px-2 py-1 rounded-full font-medium"
+                >Active</span
+              >
+              <span
+                class="inline-flex items-center bg-emerald-500/15 text-emerald-400 text-xs px-2 py-1 rounded-full font-medium"
+                >Success</span
+              >
+              <span
+                class="inline-flex items-center bg-amber-500/15 text-amber-400 text-xs px-2 py-1 rounded-full font-medium"
+                >Warning</span
+              >
+              <span
+                class="inline-flex items-center bg-rose-500/15 text-rose-400 text-xs px-2 py-1 rounded-full font-medium"
+                >Error</span
+              >
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-3">
+            <p class="text-muted text-xs font-heading">Input</p>
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Enter email..."
+                class="w-full bg-surface-DEFAULT border border-surface-border text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-primary placeholder-muted transition-colors duration-150"
+                aria-label="Demo email input" />
+            </div>
+            <div class="relative">
+              <input
+                type="password"
+                placeholder="Password"
+                class="w-full bg-surface-DEFAULT border border-surface-border text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-primary placeholder-muted transition-colors duration-150"
+                aria-label="Demo password input" />
+            </div>
+          </div>
+
+          <!-- Card -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-3">
+            <p class="text-muted text-xs font-heading">Card</p>
+            <div
+              class="bg-surface-raised border border-surface-border rounded-lg p-3">
+              <div class="flex items-center gap-2 mb-2">
+                <div
+                  class="w-6 h-6 rounded-full bg-primary/30 border border-primary/40"
+                  aria-hidden="true"></div>
+                <span class="text-white text-xs font-medium">Card Title</span>
+              </div>
+              <p class="text-muted text-xs leading-relaxed">
+                Card description goes here.
+              </p>
+            </div>
+          </div>
+
+          <!-- Loading -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-3 items-center justify-center">
+            <p class="text-muted text-xs font-heading self-start">Loading</p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"
+                role="status"
+                aria-label="Loading spinner"></div>
+              <span class="text-muted text-xs">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col items-center gap-2">
+            <p class="text-muted text-xs font-heading self-start">
+              Empty State
+            </p>
+            <div class="flex flex-col items-center gap-1 py-2">
+              <div
+                class="w-8 h-8 rounded-lg bg-surface-raised border border-surface-border flex items-center justify-center"
+                aria-hidden="true">
+                <svg
+                  class="w-4 h-4 text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.5">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+              </div>
+              <span class="text-muted text-xs text-center">No data yet</span>
+            </div>
+          </div>
+
+          <!-- Quantity Input -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-3">
+            <p class="text-muted text-xs font-heading">Quantity Input</p>
+            <div class="flex items-center gap-2 self-center">
+              <button
+                type="button"
+                class="w-7 h-7 rounded-lg bg-surface-raised border border-surface-border flex items-center justify-center text-muted hover:text-white hover:border-primary transition-colors duration-150 cursor-pointer"
+                aria-label="Decrease quantity">
+                <svg
+                  class="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M20 12H4" />
+                </svg>
+              </button>
+              <span
+                class="text-white font-heading font-semibold text-sm w-6 text-center"
+                >3</span
+              >
+              <button
+                type="button"
+                class="w-7 h-7 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center text-primary-light hover:bg-primary hover:text-white transition-colors duration-150 cursor-pointer"
+                aria-label="Increase quantity">
+                <svg
+                  class="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Typography -->
+          <div
+            class="bg-bg border border-surface-border rounded-xl p-4 flex flex-col gap-2">
+            <p class="text-muted text-xs font-heading">Typography</p>
+            <p
+              class="text-white font-heading text-base font-bold leading-tight">
+              Heading 1
+            </p>
+            <p class="text-white text-sm font-semibold">Heading 2</p>
+            <p class="text-slate-300 text-xs">Body text looks like this.</p>
+            <p class="text-muted text-xs">Caption / muted text</p>
+          </div>
+        </div>
+
+        <!-- Component names legend -->
+        <div
+          class="mt-8 pt-6 border-t border-surface-border flex flex-wrap gap-2 justify-center">
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Button</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Badge</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Input</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Card</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Typography</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Loading</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >EmptyState</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >QuantityInput</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Modal</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Collapsible</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >Divider</span
+          >
+          <span
+            class="text-muted text-xs bg-surface-raised border border-surface-border px-3 py-1 rounded-full"
+            >SafeArea</span
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== QUICK START ========== -->
+    <section
+      id="quickstart"
+      class="py-24 border-t border-surface-border reveal">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <p
+            class="text-primary-light text-sm font-heading font-medium tracking-widest uppercase mb-3">
+            Quick Start
+          </p>
+          <h2
+            class="font-heading text-3xl sm:text-4xl font-bold text-white mb-4">
+            Up and running <span class="gradient-text">in 2 minutes.</span>
+          </h2>
+          <p class="text-muted max-w-xl mx-auto text-sm">
+            Three steps. That's all it takes to go from zero to a full mobile
+            app scaffold.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+          <!-- Step 1 -->
+          <div class="relative">
+            <div
+              class="bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 h-full">
+              <div class="flex items-center gap-3 mb-5">
+                <div
+                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-heading font-bold shrink-0"
+                  aria-label="Step 1">
+                  01
+                </div>
+                <h3 class="font-heading font-semibold text-white text-sm">
+                  Clone the template
+                </h3>
+              </div>
+              <div class="code-block rounded-lg overflow-hidden text-xs">
+                <div class="px-4 py-3 leading-6">
+                  <div>
+                    <span class="token-fn">npx</span>
+                    <span class="token-string">create-expo-app</span>
+                  </div>
+                  <div class="ml-4">
+                    <span class="token-var">my-app</span>
+                    <span class="token-keyword">-t</span>
+                  </div>
+                  <div class="ml-4">
+                    <span class="token-string">expo-starter-kit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div>
+            <div
+              class="bg-surface-DEFAULT border border-surface-border rounded-2xl p-6 h-full">
+              <div class="flex items-center gap-3 mb-5">
+                <div
+                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-heading font-bold shrink-0"
+                  aria-label="Step 2">
+                  02
+                </div>
+                <h3 class="font-heading font-semibold text-white text-sm">
+                  Install dependencies
+                </h3>
+              </div>
+              <div class="code-block rounded-lg overflow-hidden text-xs">
+                <div class="px-4 py-3 leading-6">
+                  <div>
+                    <span class="token-fn">cd</span>
+                    <span class="token-var">my-app</span>
+                  </div>
+                  <div>
+                    <span class="token-fn">npm</span>
+                    <span class="token-string">install</span>
+                  </div>
+                  <div class="text-green-400">✔ Dependencies ready</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div>
+            <div
+              class="bg-surface-DEFAULT border border-primary/30 bg-primary/5 rounded-2xl p-6 h-full">
+              <div class="flex items-center gap-3 mb-5">
+                <div
+                  class="w-8 h-8 rounded-full bg-cta flex items-center justify-center text-white text-xs font-heading font-bold shrink-0"
+                  aria-label="Step 3">
+                  03
+                </div>
+                <h3 class="font-heading font-semibold text-white text-sm">
+                  Start building
+                </h3>
+              </div>
+              <div class="code-block rounded-lg overflow-hidden text-xs">
+                <div class="px-4 py-3 leading-6">
+                  <div>
+                    <span class="token-fn">npx</span>
+                    <span class="token-string">expo start</span>
+                  </div>
+                  <div class="text-green-400 mt-1">✔ Server started</div>
+                  <div class="text-green-400">✔ Ready on :8081</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project structure snippet -->
+        <div class="mt-10 code-block rounded-2xl overflow-hidden">
+          <div
+            class="flex items-center justify-between px-5 py-3 border-b border-[#21262D] bg-[#161B22]">
+            <div class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-[#484F58]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              </svg>
+              <span class="text-xs text-[#484F58] font-heading"
+                >project-structure</span
+              >
+            </div>
+            <span class="text-xs text-green-400 font-heading"
+              >ready to ship</span
+            >
+          </div>
+          <div class="px-5 py-5 text-xs leading-7 grid sm:grid-cols-2 gap-x-8">
+            <div>
+              <div>
+                <span class="token-var">app/</span>
+                <span class="token-comment">← File-based routing</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-var">(tabs)/</span>
+                <span class="token-comment">← Tab navigation</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-plain">_layout.tsx</span>
+              </div>
+              <div>
+                <span class="token-var">components/ui/</span>
+                <span class="token-comment">← Design system</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-string">button.tsx</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-string">badge.tsx</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-string">input.tsx</span>
+              </div>
+              <div class="ml-4"><span class="token-string">card.tsx</span></div>
+            </div>
+            <div>
+              <div>
+                <span class="token-var">providers/</span>
+                <span class="token-comment">← App providers</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-string">authProvider/</span>
+              </div>
+              <div>
+                <span class="token-var">stores/</span>
+                <span class="token-comment">← Zustand state</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-string">appStore.ts</span>
+              </div>
+              <div>
+                <span class="token-var">hooks/</span>
+                <span class="token-comment">← Custom hooks</span>
+              </div>
+              <div class="ml-4">
+                <span class="token-string">usePushNotifications.ts</span>
+              </div>
+              <div>
+                <span class="token-plain">tailwind.config.js</span>
+                <span class="token-comment">← Design tokens</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="py-24 reveal">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div
+          class="bg-surface-DEFAULT border border-primary/20 rounded-3xl px-8 py-16 relative overflow-hidden">
+          <!-- Background glow -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-violet-500/5 pointer-events-none"
+            aria-hidden="true"></div>
+          <div
+            class="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/15 rounded-full blur-3xl pointer-events-none"
+            aria-hidden="true"></div>
+
+          <div class="relative z-10">
+            <p
+              class="text-primary-light text-sm font-heading font-medium tracking-widest uppercase mb-4">
+              Ready to ship?
+            </p>
+            <h2
+              class="font-heading text-3xl sm:text-4xl font-bold text-white mb-4">
+              Stop building boilerplate.<br />
+              <span class="gradient-text-orange">Start building products.</span>
+            </h2>
+            <p
+              class="text-muted mb-10 max-w-md mx-auto text-sm leading-relaxed">
+              Get your full-featured Expo app running in under 2 minutes. Auth,
+              notifications, design system — all done.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <a
+                href="#quickstart"
+                class="flex items-center justify-center gap-2 bg-cta hover:bg-cta-dark text-white font-semibold px-8 py-3.5 rounded-xl transition-colors duration-150 cursor-pointer glow-orange text-sm">
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  aria-hidden="true">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Get Started Free
+              </a>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-center gap-2 bg-transparent hover:bg-surface-raised border border-surface-border text-white font-medium px-8 py-3.5 rounded-xl transition-colors duration-150 cursor-pointer text-sm">
+                <svg
+                  class="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true">
+                  <path
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="border-t border-surface-border py-10">
+      <div
+        class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2.5">
+          <div
+            class="w-6 h-6 rounded-md bg-primary flex items-center justify-center"
+            aria-hidden="true">
+            <svg
+              class="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span class="font-heading text-xs text-muted">expo-starter-kit</span>
+        </div>
+
+        <nav
+          class="flex items-center gap-5 text-xs text-muted"
+          aria-label="Footer navigation">
+          <a
+            href="#features"
+            class="hover:text-white transition-colors duration-150"
+            >Features</a
+          >
+          <a
+            href="#stack"
+            class="hover:text-white transition-colors duration-150"
+            >Stack</a
+          >
+          <a
+            href="#components"
+            class="hover:text-white transition-colors duration-150"
+            >Components</a
+          >
+          <a
+            href="#quickstart"
+            class="hover:text-white transition-colors duration-150"
+            >Quick Start</a
+          >
+        </nav>
+
+        <p class="text-muted text-xs">
+          MIT License &bull; Built with
+          <svg
+            class="w-3.5 h-3.5 inline text-rose-400 mx-0.5 -mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35z" />
+          </svg>
+          for developers
+        </p>
+      </div>
+    </footer>
+
+    <!-- ========== SCROLL REVEAL SCRIPT ========== -->
+    <script>
+      (function () {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+        );
+
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => observer.observe(el));
+      })();
+    </script>
+  </body>
+</html>
