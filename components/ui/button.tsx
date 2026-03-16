@@ -1,17 +1,17 @@
+import * as Haptics from "expo-haptics";
 import React from "react";
 import {
+	ActivityIndicator,
+	Platform,
 	Pressable,
 	PressableProps,
-	ActivityIndicator,
 	View,
-	Platform,
 } from "react-native";
 import Animated, {
-	useSharedValue,
 	useAnimatedStyle,
+	useSharedValue,
 	withSpring,
 } from "react-native-reanimated";
-import * as Haptics from "expo-haptics";
 import { Typography } from "./typography";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -33,6 +33,7 @@ interface ButtonProps extends PressableProps {
 	fullWidth?: boolean;
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;
+	className?: string;
 }
 
 const getVariantStyles = (variant: ButtonVariant, disabled: boolean) => {
@@ -115,6 +116,7 @@ export const Button: React.FC<ButtonProps> = ({
 	style,
 	onPressIn,
 	onPressOut,
+	className,
 	...props
 }) => {
 	const variantStyles = getVariantStyles(variant, disabled || loading);
@@ -149,7 +151,7 @@ export const Button: React.FC<ButtonProps> = ({
         ${variantStyles.container}
         ${sizeStyles.container}
         ${fullWidth ? "w-full" : ""}
-      `}
+      ${className}`}
 			style={[style, animatedStyle]}
 			{...props}>
 			{loading ? (

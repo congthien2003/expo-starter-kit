@@ -12,6 +12,7 @@ module.exports = {
 				primary: {
 					50: "#eff6ff",
 					100: "#dbeafe",
+					DEFAULT: "#3b82f6",
 					500: "#3b82f6",
 					600: "#2563eb",
 					900: "#1e3a8a",
@@ -27,14 +28,17 @@ module.exports = {
 				},
 				success: {
 					100: "#dcfce7",
+					DEFAULT: "#22c55e",
 					500: "#22c55e",
 				},
 				warning: {
 					100: "#fef9c3",
+					DEFAULT: "#eab308",
 					500: "#eab308",
 				},
 				danger: {
 					100: "#fee2e2",
+					DEFAULT: "#ef4444",
 					500: "#ef4444",
 				},
 			},
