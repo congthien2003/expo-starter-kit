@@ -1,11 +1,20 @@
 import React from "react";
 import {
-	TouchableOpacity,
-	TouchableOpacityProps,
+	Pressable,
+	PressableProps,
 	ActivityIndicator,
 	View,
+	Platform,
 } from "react-native";
+import Animated, {
+	useSharedValue,
+	useAnimatedStyle,
+	withSpring,
+} from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 import { Typography } from "./typography";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type ButtonVariant =
 	| "primary"
@@ -15,7 +24,7 @@ type ButtonVariant =
 	| "destructive";
 type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends PressableProps {
 	children: React.ReactNode;
 	variant?: ButtonVariant;
 	size?: ButtonSize;
@@ -104,21 +113,44 @@ export const Button: React.FC<ButtonProps> = ({
 	leftIcon,
 	rightIcon,
 	style,
+	onPressIn,
+	onPressOut,
 	...props
 }) => {
 	const variantStyles = getVariantStyles(variant, disabled || loading);
 	const sizeStyles = getSizeStyles(size);
 
+	const scale = useSharedValue(1);
+
+	const animatedStyle = useAnimatedStyle(() => ({
+		transform: [{ scale: scale.value }],
+	}));
+
+	const handlePressIn = (e: any) => {
+		scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+		if (Platform.OS !== "web" && !disabled && !loading) {
+			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		}
+		if (onPressIn) onPressIn(e);
+	};
+
+	const handlePressOut = (e: any) => {
+		scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+		if (onPressOut) onPressOut(e);
+	};
+
 	return (
-		<TouchableOpacity
+		<AnimatedPressable
 			disabled={disabled || loading}
+			onPressIn={handlePressIn}
+			onPressOut={handlePressOut}
 			className={`
         flex-row items-center justify-center
         ${variantStyles.container}
         ${sizeStyles.container}
         ${fullWidth ? "w-full" : ""}
       `}
-			style={style}
+			style={[style, animatedStyle]}
 			{...props}>
 			{loading ? (
 				<ActivityIndicator
@@ -141,7 +173,7 @@ export const Button: React.FC<ButtonProps> = ({
 					{rightIcon}
 				</View>
 			)}
-		</TouchableOpacity>
+		</AnimatedPressable>
 	);
 };
 
