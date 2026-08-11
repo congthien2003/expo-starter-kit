@@ -153,7 +153,7 @@ export function MyScreen() {
 }
 ```
 
-> **Note:** Push tokens only work on **physical devices**. Simulators will log a warning but won't crash.
+> **Note:** Push tokens only work on **physical devices**. Remote push notifications are unavailable in Expo Go on Android, so use a development build when testing push; Expo Go remains suitable for screens that do not require remote push.
 
 ### For production push (server-side)
 
