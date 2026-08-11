@@ -20,6 +20,4 @@ export { QuantityInput } from "./quantity-input";
 export { Divider, Spacer } from "./divider";
 export { SafeArea, ScreenContainer } from "./safe-area";
 
-// Existing components
 export { Collapsible } from "./collapsible";
-export { IconSymbol } from "./icon-symbol";

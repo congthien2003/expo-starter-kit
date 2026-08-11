@@ -12,7 +12,7 @@ A **production-ready** Expo starter kit with a pre-configured design system, res
 | 📐 **Responsive Typography** | `react-native-size-matters` — all font sizes scale proportionally across screen sizes |
 | 🧩 **Shared UI Components** | Button, Input, Badge, Card, Typography, QuantityInput, Loading, EmptyState, Collapsible, Divider |
 | 🔔 **Push Notifications** | Full `expo-notifications` setup with permission handling, token retrieval, and context provider |
-| 🔐 **Auth Pattern** | `AuthProvider` wired up and ready for your authentication flow |
+| 🔐 **Auth Feature** | Feature-based auth example with React Hook Form, Zod, SecureStore, and `AuthProvider` |
 | 🗂 **File-Based Routing** | Expo Router v6 with tabs + modal screen patterns |
 | 🛠 **Modern Stack** | React 19 · TypeScript strict · Zustand · React Hook Form + Zod |
 
@@ -43,6 +43,7 @@ expo-secure-store   → Secure token storage
 │   ├── (tabs)/
 │   │   ├── index.tsx          # Home screen
 │   │   ├── components-demo.tsx # UI component showcase
+│   │   ├── demo-login.tsx     # Thin route for the auth feature
 │   │   └── explore.tsx
 │   ├── _layout.tsx            # Root layout with providers
 │   └── modal.tsx
@@ -60,24 +61,39 @@ expo-secure-store   → Secure token storage
 │   │   ├── divider.tsx
 │   │   ├── safe-area.tsx
 │   │   └── modal.tsx
-│   └── themed-text.tsx
+├── features/
+│   └── auth/
+│       ├── components/        # Auth-only screens and UI
+│       ├── hooks/             # Auth-only hooks
+│       ├── providers/         # Auth context provider
+│       ├── schemas/           # Zod validation schemas
+│       ├── services/          # Auth API and persistence flow
+│       ├── types/             # Auth request, response, and entity types
+│       └── index.ts           # Public exports
 ├── context/
 │   └── NotificationProvider.tsx  # Push notification context
 ├── hooks/
-│   ├── usePushNotifications.ts   # Push notification hook
-│   └── use-theme-color.ts
-├── providers/
-│   └── authProvider.tsx          # Authentication context
-├── docs/
-│   └── DESIGN_GUIDELINE.md       # Design system specification
+│   └── usePushNotifications.ts   # Push notification hook
 └── tailwind.config.js            # Design token configuration
+```
+
+### Feature-based Architecture
+
+Keep route files in `app/` focused on navigation and compose each business capability under `features/<feature>/`. Feature-specific components, hooks, schemas, types, services, providers, stores, and utilities stay with that feature. Create only the folders the feature actually uses.
+
+Reusable design-system and common components remain in the root `components/` directory. Cross-feature infrastructure such as the Axios client and token storage remains in `lib/` or `utils/`.
+
+The `auth` feature is the reference implementation:
+
+```tsx
+import { AuthProvider, LoginScreen, useAuth } from "@/features/auth";
 ```
 
 ---
 
 ## 🎨 Design System
 
-All color tokens are defined in `tailwind.config.js` and documented in `docs/DESIGN_GUIDELINE.md`.
+All color tokens are defined in `tailwind.config.js` and consumed through NativeWind utility classes. There is no separate TypeScript theme configuration.
 
 ### Color Palette
 
@@ -211,5 +227,4 @@ For push notifications, add your EAS project ID in `app.json`:
 - [NativeWind](https://www.nativewind.dev/)
 - [react-native-size-matters](https://github.com/nirsky/react-native-size-matters)
 - [expo-notifications Guide](https://docs.expo.dev/push-notifications/overview/)
-- [Design Guideline](./docs/DESIGN_GUIDELINE.md)
 

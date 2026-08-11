@@ -1,30 +1,35 @@
 import React, { createContext, useContext, ReactNode } from "react";
-import { usePushNotifications, PushNotificationState } from "@/hooks/usePushNotifications";
+import {
+  usePushNotifications,
+  PushNotificationState,
+} from "@/hooks/usePushNotifications";
 
-const NotificationContext = createContext<PushNotificationState | undefined>(undefined);
+const NotificationContext = createContext<PushNotificationState | undefined>(
+  undefined,
+);
 
 interface NotificationProviderProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
-	children,
+  children,
 }) => {
-	const notificationState = usePushNotifications();
+  const notificationState = usePushNotifications();
 
-	return (
-		<NotificationContext.Provider value={notificationState}>
-			{children}
-		</NotificationContext.Provider>
-	);
+  return (
+    <NotificationContext.Provider value={notificationState}>
+      {children}
+    </NotificationContext.Provider>
+  );
 };
 
 export const useNotificationContext = () => {
-	const context = useContext(NotificationContext);
-	if (context === undefined) {
-		throw new Error(
-			"useNotificationContext must be used within a NotificationProvider"
-		);
-	}
-	return context;
+  const context = useContext(NotificationContext);
+  if (context === undefined) {
+    throw new Error(
+      "useNotificationContext must be used within a NotificationProvider",
+    );
+  }
+  return context;
 };

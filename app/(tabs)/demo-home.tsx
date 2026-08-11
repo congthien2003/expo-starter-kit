@@ -1,10 +1,9 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card"; // Assuming this exists
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { ScreenWrapper } from "@/components/ui/screen-wrapper";
 import { Typography } from "@/components/ui/typography";
 import { router } from "expo-router";
-import React from "react";
 import { View } from "react-native";
 
 // Mock data
@@ -14,7 +13,7 @@ const RECENT_TRANSACTIONS = [
 		title: "Starbucks Coffee",
 		amount: "-$4.50",
 		date: "Today",
-		icon: "cup.and.saucer.fill",
+		icon: "cafe",
 		color: "#F59E0B",
 	},
 	{
@@ -22,7 +21,7 @@ const RECENT_TRANSACTIONS = [
 		title: "Salary Deposit",
 		amount: "+$3,200.00",
 		date: "Yesterday",
-		icon: "building.columns.fill",
+		icon: "business",
 		color: "#10B981",
 	},
 	{
@@ -30,7 +29,7 @@ const RECENT_TRANSACTIONS = [
 		title: "Netflix Subscription",
 		amount: "-$14.99",
 		date: "Mar 12",
-		icon: "play.tv.fill",
+		icon: "play-circle",
 		color: "#EF4444",
 	},
 	{
@@ -38,7 +37,7 @@ const RECENT_TRANSACTIONS = [
 		title: "Amazon Prime",
 		amount: "-$12.99",
 		date: "Mar 10",
-		icon: "cart.fill",
+		icon: "cart",
 		color: "#3B82F6",
 	},
 	{
@@ -46,7 +45,7 @@ const RECENT_TRANSACTIONS = [
 		title: "Uber Ride",
 		amount: "-$24.50",
 		date: "Mar 8",
-		icon: "car.fill",
+		icon: "car",
 		color: "#6366F1",
 	},
 	{
@@ -54,10 +53,10 @@ const RECENT_TRANSACTIONS = [
 		title: "Grocery Store",
 		amount: "-$142.30",
 		date: "Mar 5",
-		icon: "basket.fill",
+		icon: "basket",
 		color: "#8B5CF6",
 	},
-];
+] as const;
 
 export default function DemoHomeScreen() {
 	return (
@@ -84,8 +83,8 @@ export default function DemoHomeScreen() {
 							variant="ghost"
 							className="w-12 h-12 bg-white/20 rounded-full p-0 items-center justify-center"
 							onPress={() => router.back()}>
-							<IconSymbol
-								name="bell.fill"
+							<Ionicons
+								name="notifications"
 								size={20}
 								color="white"
 							/>
@@ -112,8 +111,8 @@ export default function DemoHomeScreen() {
 					<Card className="flex-row justify-between py-5 px-6 rounded-2xl bg-white shadow-sm border-0">
 						<View className="items-center gap-2">
 							<View className="w-12 h-12 rounded-full bg-primary-100 items-center justify-center">
-								<IconSymbol
-									name="arrow.up.right"
+								<Ionicons
+									name="arrow-up"
 									size={20}
 									color="#0a7ea4"
 								/>
@@ -124,8 +123,8 @@ export default function DemoHomeScreen() {
 						</View>
 						<View className="items-center gap-2">
 							<View className="w-12 h-12 rounded-full bg-success-100 items-center justify-center">
-								<IconSymbol
-									name="arrow.down.left"
+								<Ionicons
+									name="arrow-down"
 									size={20}
 									color="#10B981"
 								/>
@@ -136,8 +135,8 @@ export default function DemoHomeScreen() {
 						</View>
 						<View className="items-center gap-2">
 							<View className="w-12 h-12 rounded-full bg-warning-100 items-center justify-center">
-								<IconSymbol
-									name="qrcode.viewfinder"
+								<Ionicons
+									name="qr-code"
 									size={20}
 									color="#F59E0B"
 								/>
@@ -148,8 +147,8 @@ export default function DemoHomeScreen() {
 						</View>
 						<View className="items-center gap-2">
 							<View className="w-12 h-12 rounded-full bg-neutral-100 items-center justify-center">
-								<IconSymbol
-									name="ellipsis"
+								<Ionicons
+									name="ellipsis-horizontal"
 									size={20}
 									color="#6B7280"
 								/>
@@ -186,8 +185,8 @@ export default function DemoHomeScreen() {
 										style={{
 											backgroundColor: `${tx.color}15`,
 										}}>
-										<IconSymbol
-											name={tx.icon as any}
+										<Ionicons
+											name={tx.icon}
 											size={20}
 											color={tx.color}
 										/>
