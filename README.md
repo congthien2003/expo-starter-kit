@@ -13,7 +13,7 @@ A **production-ready** Expo starter kit with a pre-configured design system, res
 | 🧩 **Shared UI Components** | Button, Input, Badge, Card, Typography, QuantityInput, Loading, EmptyState, Collapsible, Divider |
 | 🔔 **Push Notifications** | Full `expo-notifications` setup with permission handling, token retrieval, and context provider |
 | 🔐 **Auth Feature** | Feature-based auth example with React Hook Form, Zod, SecureStore, and `AuthProvider` |
-| 🗂 **File-Based Routing** | Expo Router v6 with tabs + modal screen patterns |
+| 🗂 **File-Based Routing** | Expo Router 57 with tabs + modal screen patterns |
 | 🛠 **Modern Stack** | React 19 · TypeScript strict · Zustand · React Hook Form + Zod |
 
 ---
@@ -21,8 +21,8 @@ A **production-ready** Expo starter kit with a pre-configured design system, res
 ## 🧰 Tech Stack
 
 ```
-Expo SDK 54         → Build system, OTA updates
-Expo Router v6      → File-based navigation
+Expo SDK 57         → Expo tooling and native modules
+Expo Router 57      → File-based navigation
 NativeWind v4       → Tailwind CSS for React Native
 react-native-size-matters → Adaptive font & layout scaling
 expo-notifications  → Push notification handling
@@ -180,8 +180,8 @@ Use the token with [Expo Push Notification API](https://docs.expo.dev/push-notif
 ## 🚀 Getting Started
 
 ```bash
-# 1. Install dependencies
-npm install
+# 1. Install the exact dependency tree committed in package-lock.json
+npm ci
 
 # 2. Start the development server
 npx expo start
@@ -192,19 +192,63 @@ npx expo start
 #    → Press 'i' for iOS simulator
 ```
 
+### Dependency policy
+
+Use **npm** and the committed `package-lock.json` for reproducible installs. Do not alternate npm and Bun installs: an existing local `bun.lock` is not the authoritative lockfile and is not maintained by this update.
+
+This project targets Expo `~57.0.31`, React Native `0.86.3`, and React/React DOM `19.2.3`. Native package versions follow Expo's SDK 57 compatibility matrix, rather than each package's independent `latest` tag. Rebuild native development clients after changing native dependencies.
+
+- NativeWind stays on `4.2.7` with Tailwind CSS `3.4.19`: its CSS interop dependency requires Tailwind 3.
+- React Hook Form resolvers stays on `5.9.2`, which supports Zod 4 and React Hook Form 7. Installing resolvers 6 produced an npm peer conflict between its optional Effect 4 requirement and the Effect 3 requirement in the existing TypeSchema dependency tree.
+- ESLint stays on 9: the React and import plugins do not declare support for ESLint 10. npm reports ESLint 9 as no longer supported; this is a known tooling limitation until the plugin chain supports a newer major.
+- TypeScript stays on `6.0.3`: the TypeScript ESLint parser does not yet declare support for TypeScript 7.
+- Expo 58 is deferred until compatibility of the existing NativeWind pipeline is established and platform smoke tests pass. This is a compatibility precaution, not a confirmed Expo 58 defect.
+
 ### Environment Setup
 
-For push notifications, add your EAS project ID in `app.json`:
+Use a Node.js version supported by the selected Expo SDK and React Native packages. For remote push, use a **native development build on a physical device**, with FCM/APNs credentials configured; Expo Go is not a substitute for testing this flow.
+
+For push notifications, merge your EAS project ID into the existing `expo` object in `app.json`:
 
 ```json
 {
-  "extra": {
-    "eas": {
-      "projectId": "your-eas-project-id"
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
     }
   }
 }
 ```
+
+The notification hook skips native push registration on web. Missing project configuration or token request failures do not produce a token; token failures preserve the permission status already obtained. Registration failures are logged without exposing tokens. Notification-tap navigation remains an application-specific TODO.
+
+### Verification after updating dependencies
+
+The installation completed with npm blocking the `unrs-resolver@1.11.1` postinstall script under its install-script approval policy. Do not disable that policy globally. Review the package and script with `npm install-scripts ls`; if you trust it, explicitly approve it with `npm install-scripts approve unrs-resolver` and follow npm's instructions. Its effect on lint tooling has not been verified.
+
+Run these checks yourself after installing dependencies:
+
+```bash
+npm ls
+npx expo install --check
+npx expo-doctor@latest
+npm run typecheck
+npm run lint
+npm audit
+```
+
+Expect no invalid/missing dependencies, SDK version mismatches, or type/lint regressions. Review audit findings individually; do not use `npm audit fix --force` to bypass compatibility constraints. These checks do not prove runtime compatibility.
+
+Then start the app with `npx expo start --clear` (or `npx expo start --dev-client` for your rebuilt development client) and check:
+
+- **Android/iOS/web:** tabs, modal open/close, login validation, successful/failed login against your configured backend, session restoration and logout.
+- **UI:** NativeWind colors and spacing, icons/fonts, keyboard avoidance, safe-area insets, scrolling and Reanimated transitions.
+- **Physical Android/iOS development builds:** grant/deny notification permission, retrieve a token with valid EAS credentials, receive a foreground notification, and handle missing project configuration or network failure without an unhandled rejection.
+- **Web:** startup must not request native notification permissions or register native push listeners.
+
+No automated test suite is configured. Platform smoke tests and native builds are required before claiming production readiness for this upgrade.
 
 ---
 
@@ -217,6 +261,7 @@ For push notifications, add your EAS project ID in `app.json`:
 | `npm run ios` | Open on iOS |
 | `npm run web` | Open in browser |
 | `npm run lint` | Run ESLint |
+| `npm run typecheck` | Check TypeScript without emitting files |
 | `npm run reset-project` | Reset to blank starter |
 
 ---
