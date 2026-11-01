@@ -6,7 +6,7 @@ import { Typography } from "@/components/ui/typography";
 import { router } from "expo-router";
 import { View } from "react-native";
 
-// Mock data
+// Standalone finance demo; unrelated to the authenticated user's account.
 const RECENT_TRANSACTIONS = [
 	{
 		id: 1,

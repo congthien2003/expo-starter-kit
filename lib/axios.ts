@@ -1,58 +1,35 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import Config from "@/constants/config";
-import tokenService from "@/utils/tokenService";
+import { create, isAxiosError, AxiosHeaders, type InternalAxiosRequestConfig } from 'axios';
+import { requireApiUrl } from '@/constants/config';
+import { AppError, normalizeError } from './errors';
+import { sessionManager } from '@/features/auth/services/sessionManager';
 
-// Create axios instance
-const axiosInstance = axios.create({
-	baseURL: Config.API_URL,
-	timeout: 15000,
-	headers: {
-		"Content-Type": "application/json",
-	},
+declare module 'axios' {
+  interface AxiosRequestConfig { authMode?: 'required' | 'none'; sessionRevision?: number }
+}
+// authMode avoids colliding with Axios's built-in HTTP Basic `auth` option.
+type Request = InternalAxiosRequestConfig;
+const client = create({ timeout: 15000, headers: { 'Content-Type': 'application/json' } });
+client.interceptors.request.use(async (config: Request) => {
+  const base = requireApiUrl();
+  const destination = new URL(config.url ?? '', `${base}/`);
+  if (destination.origin !== new URL(base).origin) throw new AppError('configuration', 'The API client only supports the configured API origin.');
+  config.baseURL = base;
+  config.headers = AxiosHeaders.from(config.headers);
+  config.headers.delete('Authorization');
+  if (config.authMode !== 'none') {
+    await sessionManager.checkExpiry();
+    const { session, revision } = sessionManager.getSnapshot();
+    if (!session) throw new AppError('unauthorized', 'Please sign in again.');
+    config.headers.set('Authorization', `Bearer ${session.accessToken}`);
+    config.sessionRevision = revision;
+  }
+  return config;
 });
-
-// Request interceptor - attach token
-axiosInstance.interceptors.request.use(
-	async (config: InternalAxiosRequestConfig) => {
-		const token = await tokenService.getAccessToken();
-		if (token && config.headers) {
-			config.headers.Authorization = `Bearer ${token}`;
-		}
-		return config;
-	},
-	(error: AxiosError) => {
-		return Promise.reject(error);
-	},
-);
-
-// Response interceptor - handle errors
-axiosInstance.interceptors.response.use(
-	(response) => response,
-	async (error: AxiosError) => {
-		const status = error.response?.status;
-
-		switch (status) {
-			case 401:
-				// Unauthorized - clear tokens and redirect to login
-				await tokenService.clearAll();
-				// You can emit an event here to trigger navigation to login
-				console.error("Unauthorized - Please login again");
-				break;
-			case 403:
-				console.error("Forbidden - You do not have permission");
-				break;
-			case 404:
-				console.error("Not Found - Resource does not exist");
-				break;
-			case 500:
-				console.error("Server Error - Please try again later");
-				break;
-			default:
-				console.error("An error occurred:", error.message);
-		}
-
-		return Promise.reject(error);
-	},
-);
-
-export default axiosInstance;
+client.interceptors.response.use(response => response, async (error: unknown) => {
+  if (isAxiosError(error) && error.response?.status === 401 && error.config?.authMode !== 'none') {
+    const revision = error.config?.sessionRevision;
+    if (revision !== undefined && revision === sessionManager.getSnapshot().revision) await sessionManager.invalidate('unauthorized', revision);
+  }
+  return Promise.reject(normalizeError(error));
+});
+export default client;

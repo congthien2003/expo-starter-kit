@@ -1,5 +1,7 @@
 # Project Plan: Expo Starter Kit Design & Notification Setup
 
+> **Historical / Superseded.** Kế hoạch cũ này được giữ để tham khảo lịch sử; không phải hướng dẫn triển khai hiện tại. Xem [thiết kế mobile](docs/superpowers/specs/2026-11-01-mobile-base-stability-design.md), [implementation plan](docs/superpowers/plans/2026-11-01-mobile-base-stability.md) và [AGENTS.md](AGENTS.md). Quy tắc không tự verify/commit trong AGENTS.md có ưu tiên cao hơn nội dung bên dưới.
+
 ## Overview
 Cập nhật design guideline (màu sắc, spacing, typography, shadow) cho Expo starter-kit theo file `/docs/DESIGN_GUIDELINE.md`. Áp dụng responsive design sử dụng `react-native-size-matters` cho tất cả component hiện có tại trang demo. Ngoài ra, thiết lập Notification local thông qua cơ chế Context của `expo-notifications`, và cuối cùng cập nhật thông tin chuẩn meta (package.json, readme, logger) cho một starter-kit.
 

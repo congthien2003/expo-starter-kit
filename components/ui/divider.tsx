@@ -12,11 +12,11 @@ export const Divider: React.FC<DividerProps> = ({
 }) => {
 	if (vertical) {
 		return (
-			<View className={`w-px bg-secondary-200 self-stretch ${className}`} />
+			<View className={`w-px bg-neutral-200 self-stretch ${className}`} />
 		);
 	}
 
-	return <View className={`h-px bg-secondary-200 w-full ${className}`} />;
+	return <View className={`h-px bg-neutral-200 w-full ${className}`} />;
 };
 
 interface SpacerProps {

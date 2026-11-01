@@ -1,6 +1,5 @@
 import React from "react";
-import { Text, TextProps, StyleSheet } from "react-native";
-import { s } from "react-native-size-matters";
+import { Text, TextProps, useWindowDimensions } from "react-native";
 
 type TypographyVariant =
 	| "h1"
@@ -32,23 +31,23 @@ interface TypographyProps extends TextProps {
 const getVariantSize = (variant: TypographyVariant): number => {
 	switch (variant) {
 		case "h1":
-			return s(30); // ~ text-3xl
+			return 30;
 		case "h2":
-			return s(24); // ~ text-2xl
+			return 24;
 		case "h3":
-			return s(20); // ~ text-xl
+			return 20;
 		case "h4":
-			return s(18); // ~ text-lg
+			return 18;
 		case "body":
-			return s(16); // ~ text-base
+			return 16;
 		case "body-sm":
-			return s(14); // ~ text-sm
+			return 14;
 		case "caption":
-			return s(12); // ~ text-xs
+			return 12;
 		case "label":
-			return s(14); // ~ text-sm
+			return 14;
 		default:
-			return s(16);
+			return 16;
 	}
 };
 
@@ -124,7 +123,8 @@ export const Typography: React.FC<TypographyProps> = ({
 	style,
 	...props
 }) => {
-	const fontSize = getVariantSize(variant);
+	const { width } = useWindowDimensions();
+	const fontSize = getVariantSize(variant) * Math.min(1.15, Math.max(0.9, width / 375));
 	const colorStyles = getColorStyles(color);
 	const weightStyles = getWeightStyles(weight, variant);
 	const alignStyles = align ? getAlignStyles(align) : "";
@@ -132,7 +132,7 @@ export const Typography: React.FC<TypographyProps> = ({
 	return (
 		<Text
 			className={`${colorStyles} ${weightStyles} ${alignStyles} ${className || ""}`}
-			style={[style, { fontSize }]}
+			style={[{ fontSize }, style]}
 			{...props}>
 			{children}
 		</Text>

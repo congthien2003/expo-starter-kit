@@ -6,6 +6,8 @@ import {
 	Pressable,
 	PressableProps,
 	View,
+	GestureResponderEvent,
+	PressableStateCallbackType,
 } from "react-native";
 import Animated, {
 	useAnimatedStyle,
@@ -117,6 +119,7 @@ export const Button: React.FC<ButtonProps> = ({
 	onPressIn,
 	onPressOut,
 	className,
+	accessibilityState,
 	...props
 }) => {
 	const variantStyles = getVariantStyles(variant, disabled || loading);
@@ -125,24 +128,28 @@ export const Button: React.FC<ButtonProps> = ({
 	const scale = useSharedValue(1);
 
 	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }],
+		transform: [{ scale: scale.get() }],
 	}));
 
-	const handlePressIn = (e: any) => {
-		scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+	const handlePressIn = (e: GestureResponderEvent) => {
+		scale.set(withSpring(0.97, { damping: 15, stiffness: 300 }));
 		if (Platform.OS !== "web" && !disabled && !loading) {
-			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+			void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
 		}
 		if (onPressIn) onPressIn(e);
 	};
 
-	const handlePressOut = (e: any) => {
-		scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+	const handlePressOut = (e: GestureResponderEvent) => {
+		scale.set(withSpring(1, { damping: 15, stiffness: 300 }));
 		if (onPressOut) onPressOut(e);
 	};
 
 	return (
 		<AnimatedPressable
+			{...props}
+			accessibilityRole="button"
+			accessibilityLabel={props.accessibilityLabel ?? (typeof children === 'string' ? children : undefined)}
+			accessibilityState={{ ...accessibilityState, disabled: disabled || loading, busy: loading }}
 			disabled={disabled || loading}
 			onPressIn={handlePressIn}
 			onPressOut={handlePressOut}
@@ -152,8 +159,7 @@ export const Button: React.FC<ButtonProps> = ({
         ${sizeStyles.container}
         ${fullWidth ? "w-full" : ""}
       ${className}`}
-			style={[style, animatedStyle]}
-			{...props}>
+			style={(state: PressableStateCallbackType) => [{ minHeight: 44, minWidth: 44 }, typeof style === 'function' ? style(state) : style, animatedStyle]}>
 			{loading ? (
 				<ActivityIndicator
 					size="small"
@@ -164,9 +170,10 @@ export const Button: React.FC<ButtonProps> = ({
 					}
 				/>
 			) : (
-				<View className="flex-row items-center gap-2">
+				<View className="flex-row items-center gap-2 max-w-full" style={{ flexShrink: 1 }}>
 					{leftIcon}
 					<Typography
+						style={{ flexShrink: 1, textAlign: 'center' }}
 						variant={sizeStyles.textVariant}
 						color={variantStyles.textType}
 						weight="semibold">

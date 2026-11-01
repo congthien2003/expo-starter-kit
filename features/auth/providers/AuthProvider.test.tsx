@@ -1,0 +1,50 @@
+import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { AuthProvider } from './AuthProvider';
+import { useAuth } from '../hooks/useAuth';
+import { sessionManager } from '../services/sessionManager';
+import { sessionStorage } from '../services/sessionStorage';
+import authService from '../services/authService';
+import { AppError } from '@/lib/errors';
+jest.mock('../services/authService', () => ({ __esModule: true, default: { login: jest.fn(), getMe: jest.fn() } }));
+beforeEach(async () => {
+  jest.spyOn(sessionStorage, 'read').mockResolvedValue(null);
+  jest.spyOn(sessionStorage, 'write').mockResolvedValue();
+  jest.spyOn(sessionStorage, 'clear').mockResolvedValue();
+  await sessionManager.invalidate('logout');
+});
+afterEach(() => jest.restoreAllMocks());
+const response = { isSuccess: true as const, data: { accessToken: 'mock', expiresIn: 3600, user: { id: '1', email: 'a@b.com', fullName: 'A', role: 'user', isActive: true, createdAt: '' } } };
+it('only authenticates after storage succeeds and reports a failed write', async () => {
+  jest.mocked(authService.login).mockResolvedValue(response);
+  jest.mocked(sessionStorage.write).mockRejectedValueOnce(new AppError('storage', 'Cannot save session.'));
+  const hook = renderHook(() => useAuth(), { wrapper: AuthProvider });
+  await waitFor(() => expect(hook.result.current.isBootstrapping).toBe(false));
+  await act(async () => { expect(await hook.result.current.login('a@b.com', 'x')).toMatchObject({ isSuccess: false }); });
+  expect(hook.result.current.isAuthenticated).toBe(false);
+  await act(async () => { expect(await hook.result.current.login('a@b.com', 'x')).toMatchObject({ isSuccess: true }); });
+  expect(hook.result.current.user?.email).toBe('a@b.com');
+});
+it('ignores a service login result arriving after logout', async () => {
+  let release!: (value: typeof response) => void;
+  jest.mocked(authService.login).mockImplementationOnce(() => new Promise(resolve => { release = resolve; }));
+  const hook = renderHook(() => useAuth(), { wrapper: AuthProvider });
+  await waitFor(() => expect(hook.result.current.isBootstrapping).toBe(false));
+  let login!: ReturnType<typeof hook.result.current.login>;
+  act(() => { login = hook.result.current.login('a@b.com', 'x'); });
+  await act(async () => { await hook.result.current.logout(); release(response); await login; });
+  expect(hook.result.current.isAuthenticated).toBe(false);
+});
+it('does not read storage again after a failed logout and provider remount', async () => {
+  jest.mocked(authService.login).mockResolvedValue(response);
+  const first = renderHook(() => useAuth(), { wrapper: AuthProvider });
+  await waitFor(() => expect(first.result.current.isBootstrapping).toBe(false));
+  await act(async () => { await first.result.current.login('a@b.com', 'x'); });
+  jest.mocked(sessionStorage.clear).mockRejectedValueOnce(new AppError('storage', 'Cannot remove session.'));
+  await act(async () => { await first.result.current.logout(); });
+  first.unmount();
+  jest.mocked(sessionStorage.read).mockClear();
+  const remount = renderHook(() => useAuth(), { wrapper: AuthProvider });
+  expect(remount.result.current.isAuthenticated).toBe(false);
+  expect(remount.result.current.cleanupError?.kind).toBe('storage');
+  expect(sessionStorage.read).not.toHaveBeenCalled();
+});

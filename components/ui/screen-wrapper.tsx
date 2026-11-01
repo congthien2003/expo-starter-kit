@@ -46,6 +46,8 @@ interface ScreenWrapperProps {
 	 * Style bổ sung cho content container (nếu scrollable = true thì áp dụng cho ScrollView contentContainerStyle)
 	 */
 	contentContainerStyle?: StyleProp<ViewStyle>;
+	keyboardVerticalOffset?: number;
+	keyboardShouldPersistTaps?: 'always' | 'never' | 'handled';
 }
 
 export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -57,6 +59,8 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
 	animated = true,
 	style,
 	contentContainerStyle,
+	keyboardVerticalOffset = 0,
+	keyboardShouldPersistTaps = 'handled',
 }) => {
 	const insets = useSafeAreaInsets();
 
@@ -72,6 +76,8 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
 	if (scrollable) {
 		content = (
 			<ScrollView
+				keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+				keyboardDismissMode="on-drag"
 				showsVerticalScrollIndicator={false}
 				bounces={false}
 				contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}>
@@ -97,6 +103,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
 	if (keyboardAvoidingView) {
 		return (
 			<KeyboardAvoidingView
+				keyboardVerticalOffset={keyboardVerticalOffset}
 				style={{ flex: 1 }}
 				behavior={Platform.OS === "ios" ? "padding" : "height"}>
 				{containerContent}

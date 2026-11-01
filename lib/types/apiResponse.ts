@@ -1,9 +1,2 @@
-/**
- * Generic API response wrapper used across all services.
- */
-export interface ApiResponse<T = unknown> {
-	isSuccess: boolean;
-	data?: T;
-	message?: string;
-	statusCode?: number;
-}
+// Compatibility export; models/common owns the contract.
+export type { ApiResponse, ApiFailure, ApiError } from '@/models/common/apiResponse';

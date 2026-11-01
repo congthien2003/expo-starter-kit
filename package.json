@@ -1,19 +1,25 @@
 {
   "name": "expo-starter-kit",
-  "description": "A production-ready Expo starter kit with NativeWind, design system, responsive typography, shared UI components, auth pattern, and push notifications.",
+  "description": "An Android/iOS Expo starter kit with NativeWind, shared UI, mock auth flows, session management, and opt-in push notifications.",
   "version": "1.0.0",
   "author": "CongThien",
   "homepage": "https://github.com/congthien2003/expo-starter-kit",
-  "keywords": ["expo", "react-native", "starter-kit", "nativewind", "typescript"],
+  "keywords": [
+    "expo",
+    "react-native",
+    "starter-kit",
+    "nativewind",
+    "typescript"
+  ],
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint app components features constants context hooks lib models utils jest.setup.ts --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "jest --watch=false --runInBand"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
@@ -58,9 +64,15 @@
     "zustand": "^5.0.16"
   },
   "devDependencies": {
+    "@react-native/jest-preset": "^0.86.3",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^29.5.14",
     "@types/react": "~19.2.10",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.2",
+    "jest": "^29.7.0",
+    "jest-expo": "~57.0.6",
+    "react-test-renderer": "19.2.3",
     "typescript": "~6.0.3"
   },
   "private": true

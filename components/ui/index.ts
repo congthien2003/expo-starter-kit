@@ -21,3 +21,5 @@ export { Divider, Spacer } from "./divider";
 export { SafeArea, ScreenContainer } from "./safe-area";
 
 export { Collapsible } from "./collapsible";
+export { ErrorState } from './error-state';
+export { ScreenWrapper } from './screen-wrapper';

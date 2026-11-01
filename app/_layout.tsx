@@ -1,28 +1,14 @@
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
-import "../global.css";
+import { StatusBar } from 'expo-status-bar';
+import 'react-native-reanimated';
+import '../global.css';
+import { AppErrorBoundary } from '@/components/app-error-boundary';
+import { NotificationProvider } from '@/context/NotificationProvider';
+import { AuthProvider, AuthBootstrap } from '@/features/auth';
+import { AuthNavigator } from '@/features/auth/components/AuthNavigator';
 
-import { NotificationProvider } from "@/context/NotificationProvider";
-import { AuthProvider } from "@/features/auth";
-
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
-
+function Routes() {
+  return <NotificationProvider><AuthNavigator /><StatusBar style="dark" /></NotificationProvider>;
+}
 export default function RootLayout() {
-  return (
-    <AuthProvider>
-      <NotificationProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
-        </Stack>
-        <StatusBar style="auto" />
-      </NotificationProvider>
-    </AuthProvider>
-  );
+  return <AppErrorBoundary><AuthProvider><AuthBootstrap><Routes /></AuthBootstrap></AuthProvider></AppErrorBoundary>;
 }

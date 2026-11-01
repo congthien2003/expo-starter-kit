@@ -13,11 +13,14 @@ export const SafeArea: React.FC<SafeAreaProps> = ({
 	edges = ["top", "bottom"],
 	backgroundColor = "white",
 	className,
+	style,
 	...props
 }) => {
 	return (
 		<SafeAreaView
-			className={`flex-1 bg-${backgroundColor} ${className || ""}`}
+			edges={edges}
+			className={`flex-1 ${className || ""}`}
+			style={[{ backgroundColor }, style]}
 			{...props}>
 			{children}
 		</SafeAreaView>
@@ -35,6 +38,7 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
 	withPadding = true,
 	withSafeArea = true,
 	className,
+	style,
 	...props
 }) => {
 	const insets = useSafeAreaInsets();
@@ -42,14 +46,15 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
 	return (
 		<View
 			className={`flex-1 bg-white ${className || ""}`}
-			style={
+			style={[
 				withSafeArea
 					? {
 							paddingTop: insets.top,
 							paddingBottom: insets.bottom,
 						}
-					: undefined
-			}
+					: undefined,
+				style,
+			]}
 			{...props}>
 			<View className={`flex-1 ${withPadding ? "px-4" : ""}`}>{children}</View>
 		</View>

@@ -21,7 +21,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
 	return (
 		<View className="flex-1 items-center justify-center py-12 px-6">
-			<View className="w-20 h-20 rounded-full bg-secondary-100 items-center justify-center mb-4">
+			<View className="w-20 h-20 rounded-full bg-neutral-100 items-center justify-center mb-4">
 				<Ionicons name={icon} size={40} color="#64748b" />
 			</View>
 			<Typography variant="h4" align="center" className="mb-2">
