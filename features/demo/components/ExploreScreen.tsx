@@ -7,7 +7,7 @@ import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { Collapsible } from "@/components/ui/collapsible";
 import { Typography } from "@/components/ui/typography";
 
-export default function TabTwoScreen() {
+export default function ExploreScreen() {
   return (
     <ParallaxScrollView
       headerClassName="bg-neutral-200"
@@ -30,8 +30,8 @@ export default function TabTwoScreen() {
       <Collapsible title="File-based routing">
         <Typography>
           This app has two screens:{" "}
-          <Typography weight="semibold">app/(tabs)/index.tsx</Typography> and{" "}
-          <Typography weight="semibold">app/(tabs)/explore.tsx</Typography>.
+          <Typography weight="semibold">app/(tabs)/home.tsx</Typography> and{" "}
+          <Typography weight="semibold">app/(tabs)/account.tsx</Typography>.
         </Typography>
         <Typography>
           The layout file in{" "}
@@ -43,11 +43,10 @@ export default function TabTwoScreen() {
         </ExternalLink>
       </Collapsible>
 
-      <Collapsible title="Android, iOS, and web support">
+      <Collapsible title="Android and iOS">
         <Typography>
-          You can open this project on Android, iOS, and the web. To open the web
-          version, press <Typography weight="semibold">w</Typography> in the
-          terminal running this project.
+          This starter kit focuses on Android and iOS. Native push notifications
+          need a development build with your own project configuration.
         </Typography>
       </Collapsible>
 

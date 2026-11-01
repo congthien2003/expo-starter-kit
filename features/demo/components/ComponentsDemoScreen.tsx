@@ -34,7 +34,7 @@ export default function ComponentsDemo() {
 
 	return (
 		<SafeArea>
-			<ScrollView className="flex-1 bg-white">
+			<ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
 				<View className="p-4">
 					<Heading1 className="mb-6">Component Demo</Heading1>
 
@@ -115,7 +115,7 @@ export default function ComponentsDemo() {
 									size="sm"
 									variant="primary"
 									onPress={() =>
-										router.push("/(tabs)/demo-home")
+										router.push("/demo/finance-home")
 									}>
 									Small Button Demo Home
 								</Button>
@@ -123,9 +123,9 @@ export default function ComponentsDemo() {
 									size="md"
 									variant="primary"
 									onPress={() =>
-										router.push("/(tabs)/demo-login")
+										router.push("/(tabs)/account")
 									}>
-									Medium Button Demo Login
+									Medium Button Account
 								</Button>
 								<Button size="lg" variant="primary">
 									Large Button

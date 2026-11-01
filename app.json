@@ -6,7 +6,7 @@
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
 		"scheme": "starterkit",
-		"userInterfaceStyle": "automatic",
+		"userInterfaceStyle": "light",
 		"ios": {
 			"supportsTablet": true
 		},

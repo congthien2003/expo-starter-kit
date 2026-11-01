@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import {
 	TextInput as RNTextInput,
 	TextInputProps as RNTextInputProps,
@@ -16,9 +16,10 @@ interface InputProps extends RNTextInputProps {
 	rightIcon?: React.ReactNode;
 	disabled?: boolean;
 	isPassword?: boolean;
+	inputClassName?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
+export const Input = forwardRef<RNTextInput, InputProps>(({
 	label,
 	error,
 	hint,
@@ -27,8 +28,12 @@ export const Input: React.FC<InputProps> = ({
 	disabled = false,
 	isPassword = false,
 	className,
+	inputClassName,
+	onFocus,
+	onBlur,
+	accessibilityLabel,
 	...props
-}) => {
+}, ref) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -44,7 +49,7 @@ export const Input: React.FC<InputProps> = ({
 	};
 
 	return (
-		<View className="w-full">
+		<View className={`w-full ${className || ""}`}>
 			{label && (
 				<Typography variant="label" className="mb-1.5">
 					{label}
@@ -59,19 +64,28 @@ export const Input: React.FC<InputProps> = ({
         `}>
 				{leftIcon && <View className="mr-2">{leftIcon}</View>}
 				<RNTextInput
+					ref={ref}
+					accessibilityLabel={accessibilityLabel ?? label}
+					accessibilityState={{ disabled }}
 					className={`
             flex-1 py-3 text-base text-neutral-900
             ${disabled ? "text-neutral-400" : ""}
+            ${inputClassName || ""}
           `}
 					placeholderTextColor="#94a3b8"
 					editable={!disabled}
-					onFocus={() => setIsFocused(true)}
-					onBlur={() => setIsFocused(false)}
+					onFocus={event => { setIsFocused(true); onFocus?.(event); }}
+					onBlur={event => { setIsFocused(false); onBlur?.(event); }}
 					secureTextEntry={isPassword && !showPassword}
 					{...props}
 				/>
 				{isPassword && (
 					<TouchableOpacity
+						accessibilityRole="button"
+						accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+						accessibilityState={{ disabled }}
+						disabled={disabled}
+						hitSlop={12}
 						onPress={() => setShowPassword(!showPassword)}
 						className="ml-2">
 						<Ionicons
@@ -89,6 +103,7 @@ export const Input: React.FC<InputProps> = ({
 			)}
 		</View>
 	);
-};
+});
+Input.displayName = 'Input';
 
 export default Input;

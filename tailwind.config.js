@@ -40,6 +40,7 @@ module.exports = {
 					100: "#fee2e2",
 					DEFAULT: "#ef4444",
 					500: "#ef4444",
+					600: "#dc2626",
 				},
 			},
 			spacing: {

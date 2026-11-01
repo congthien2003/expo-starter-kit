@@ -1,18 +1,3 @@
-/**
- * Generic API response wrapper
- */
-export interface ApiResponse<T> {
-	isSuccess: boolean;
-	data: T;
-	message?: string;
-	errors?: string[];
-}
-
-/**
- * Error response from API
- */
-export interface ApiError {
-	isSuccess: false;
-	message: string;
-	errors?: string[];
-}
+export type ApiFailure = { isSuccess: false; message: string; statusCode?: number; fieldErrors?: Record<string, string[]> };
+export type ApiResponse<T = unknown> = { isSuccess: true; data: T; message?: string; statusCode?: number } | ApiFailure;
+export type ApiError = ApiFailure;

@@ -36,6 +36,10 @@ export const QuantityInput: React.FC<QuantityInputProps> = ({
 	return (
 		<View className="flex-row items-center">
 			<TouchableOpacity
+				accessibilityRole="button"
+				accessibilityLabel="Decrease quantity"
+				accessibilityState={{ disabled: !canDecrement }}
+				hitSlop={8}
 				onPress={handleDecrement}
 				disabled={!canDecrement}
 				className={`w-8 h-8 rounded-full items-center justify-center ${
@@ -55,6 +59,10 @@ export const QuantityInput: React.FC<QuantityInputProps> = ({
 			</Typography>
 
 			<TouchableOpacity
+				accessibilityRole="button"
+				accessibilityLabel="Increase quantity"
+				accessibilityState={{ disabled: !canIncrement }}
+				hitSlop={8}
 				onPress={handleIncrement}
 				disabled={!canIncrement}
 				className={`w-8 h-8 rounded-full items-center justify-center ${

@@ -1,275 +1,154 @@
-# 🚀 Expo Starter Kit
+# Expo Starter Kit — Android & iOS
 
-A **production-ready** Expo starter kit with a pre-configured design system, responsive typography, reusable UI components, auth patterns, and push notification setup. Built for teams that want to ship fast without sacrificing quality.
+Source base TypeScript/Expo với NativeWind, UI dùng chung, auth mock, quản lý phiên và notifications chủ động. Đợt cập nhật này tập trung Android/iOS; web không nằm trong phạm vi nghiệm thu. Chưa coi đây là bằng chứng production readiness: xem [checklist mobile](docs/verification/mobile-base-stability.md) và kết quả kiểm tra thực tế của dự án bạn.
 
----
+## Bắt đầu
 
-## ✨ Features
-
-| Feature | Details |
-|---------|---------|
-| 🎨 **Design System** | Tailwind / NativeWind with branded color palette (`primary`, `neutral`, `success`, `warning`, `danger`) |
-| 📐 **Responsive Typography** | `react-native-size-matters` — all font sizes scale proportionally across screen sizes |
-| 🧩 **Shared UI Components** | Button, Input, Badge, Card, Typography, QuantityInput, Loading, EmptyState, Collapsible, Divider |
-| 🔔 **Push Notifications** | Full `expo-notifications` setup with permission handling, token retrieval, and context provider |
-| 🔐 **Auth Feature** | Feature-based auth example with React Hook Form, Zod, SecureStore, and `AuthProvider` |
-| 🗂 **File-Based Routing** | Expo Router 57 with tabs + modal screen patterns |
-| 🛠 **Modern Stack** | React 19 · TypeScript strict · Zustand · React Hook Form + Zod |
-
----
-
-## 🧰 Tech Stack
-
-```
-Expo SDK 57         → Expo tooling and native modules
-Expo Router 57      → File-based navigation
-NativeWind v4       → Tailwind CSS for React Native
-react-native-size-matters → Adaptive font & layout scaling
-expo-notifications  → Push notification handling
-Zustand             → Lightweight global state
-React Hook Form     → Form management
-Zod                 → Runtime schema validation
-Axios               → HTTP client
-FlashList           → High-performance list rendering
-expo-secure-store   → Secure token storage
-```
-
----
-
-## 📁 Project Structure
-
-```
-├── app/
-│   ├── (tabs)/
-│   │   ├── index.tsx          # Home screen
-│   │   ├── components-demo.tsx # UI component showcase
-│   │   ├── demo-login.tsx     # Thin route for the auth feature
-│   │   └── explore.tsx
-│   ├── _layout.tsx            # Root layout with providers
-│   └── modal.tsx
-├── components/
-│   ├── ui/                    # Shared design-system components
-│   │   ├── button.tsx
-│   │   ├── badge.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   ├── typography.tsx     # Responsive Typography + size-matters
-│   │   ├── loading.tsx
-│   │   ├── empty-state.tsx
-│   │   ├── quantity-input.tsx
-│   │   ├── collapsible.tsx
-│   │   ├── divider.tsx
-│   │   ├── safe-area.tsx
-│   │   └── modal.tsx
-├── features/
-│   └── auth/
-│       ├── components/        # Auth-only screens and UI
-│       ├── hooks/             # Auth-only hooks
-│       ├── providers/         # Auth context provider
-│       ├── schemas/           # Zod validation schemas
-│       ├── services/          # Auth API and persistence flow
-│       ├── types/             # Auth request, response, and entity types
-│       └── index.ts           # Public exports
-├── context/
-│   └── NotificationProvider.tsx  # Push notification context
-├── hooks/
-│   └── usePushNotifications.ts   # Push notification hook
-└── tailwind.config.js            # Design token configuration
-```
-
-### Feature-based Architecture
-
-Keep route files in `app/` focused on navigation and compose each business capability under `features/<feature>/`. Feature-specific components, hooks, schemas, types, services, providers, stores, and utilities stay with that feature. Create only the folders the feature actually uses.
-
-Reusable design-system and common components remain in the root `components/` directory. Cross-feature infrastructure such as the Axios client and token storage remains in `lib/` or `utils/`.
-
-The `auth` feature is the reference implementation:
-
-```tsx
-import { AuthProvider, LoginScreen, useAuth } from "@/features/auth";
-```
-
----
-
-## 🎨 Design System
-
-All color tokens are defined in `tailwind.config.js` and consumed through NativeWind utility classes. There is no separate TypeScript theme configuration.
-
-### Color Palette
-
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `primary-500` | `#3b82f6` | Main brand, buttons, active states |
-| `neutral-50` | `#f8fafc` | App background |
-| `neutral-900` | `#0f172a` | Headings |
-| `neutral-800` | `#1e293b` | Body text |
-| `neutral-400` | `#94a3b8` | Placeholder, disabled |
-| `success-500` | `#22c55e` | Confirmed, completed |
-| `warning-500` | `#eab308` | Pending, caution |
-| `danger-500` | `#ef4444` | Error, cancel |
-
-### Typography
-
-Uses `react-native-size-matters` (`s()`) to scale font sizes proportionally based on device width.
-
-```tsx
-import { Heading1, Body, Caption, Typography } from "@/components/ui/typography";
-
-<Heading1>Dashboard</Heading1>
-<Body color="muted">Secondary content here</Body>
-<Caption>12px · auto-scaled</Caption>
-<Typography variant="h3" color="primary" weight="semibold">Custom</Typography>
-```
-
-### UI Components
-
-```tsx
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-
-// Button variants: primary | secondary | outline | ghost | destructive
-<Button variant="primary" size="md" onPress={...}>Submit</Button>
-
-// Input with label, error, hint, icons, password toggle
-<Input label="Email" error="Invalid email" hint="Used for login" />
-
-// Semantic badge
-<Badge variant="success">Completed</Badge>
-<Badge variant="danger">Cancelled</Badge>
-
-// Card variants: elevated | outlined | filled
-<Card variant="elevated"><Body>Card content</Body></Card>
-```
-
----
-
-## 🔔 Push Notifications
-
-Pre-configured with `expo-notifications`. Handles permissions, token retrieval, foreground/background events.
-
-### Usage
-
-```tsx
-// The provider is already wrapped in app/_layout.tsx
-// Just consume the context anywhere in your app:
-
-import { useNotificationContext } from "@/context/NotificationProvider";
-
-export function MyScreen() {
-  const { expoPushToken, notification, permissionStatus } = useNotificationContext();
-
-  return (
-    <View>
-      <Text>Token: {expoPushToken?.data}</Text>
-      <Text>Permission: {permissionStatus}</Text>
-    </View>
-  );
-}
-```
-
-> **Note:** Push tokens only work on **physical devices**. Remote push notifications are unavailable in Expo Go on Android, so use a development build when testing push; Expo Go remains suitable for screens that do not require remote push.
-
-### For production push (server-side)
-
-Use the token with [Expo Push Notification API](https://docs.expo.dev/push-notifications/sending-notifications/) or FCM/APNs directly.
-
----
-
-## 🚀 Getting Started
-
-```bash
-# 1. Install the exact dependency tree committed in package-lock.json
+```powershell
 npm ci
-
-# 2. Start the development server
-npx expo start
-
-# 3. Open on device
-#    → Scan QR code with Expo Go
-#    → Press 'a' for Android emulator
-#    → Press 'i' for iOS simulator
+Copy-Item .env.example .env.local
+npm start
 ```
 
-### Dependency policy
+Các command trong README do developer tự chạy. Expo Go dùng để xem UI phù hợp; push cần development build, cấu hình native, EAS project và thiết bị thật. iOS simulator cần macOS/Xcode; Windows không chạy iOS simulator local.
 
-Use **npm** and the committed `package-lock.json` for reproducible installs. Do not alternate npm and Bun installs: an existing local `bun.lock` is not the authoritative lockfile and is not maintained by this update.
+Dependency installation trong đợt triển khai dùng `--ignore-scripts`; lifecycle scripts chưa được chạy. Nếu môi trường npm chặn script của package, review package/script cụ thể theo chính sách npm của bạn, không tắt chính sách hoặc dùng force install để bỏ qua lỗi.
 
-This project targets Expo `~57.0.31`, React Native `0.86.3`, and React/React DOM `19.2.3`. Native package versions follow Expo's SDK 57 compatibility matrix, rather than each package's independent `latest` tag. Rebuild native development clients after changing native dependencies.
+## Cấu hình
 
-- NativeWind stays on `4.2.7` with Tailwind CSS `3.4.19`: its CSS interop dependency requires Tailwind 3.
-- React Hook Form resolvers stays on `5.9.2`, which supports Zod 4 and React Hook Form 7. Installing resolvers 6 produced an npm peer conflict between its optional Effect 4 requirement and the Effect 3 requirement in the existing TypeSchema dependency tree.
-- ESLint stays on 9: the React and import plugins do not declare support for ESLint 10. npm reports ESLint 9 as no longer supported; this is a known tooling limitation until the plugin chain supports a newer major.
-- TypeScript stays on `6.0.3`: the TypeScript ESLint parser does not yet declare support for TypeScript 7.
-- Expo 58 is deferred until compatibility of the existing NativeWind pipeline is established and platform smoke tests pass. This is a compatibility precaution, not a confirmed Expo 58 defect.
+| Biến | Mặc định | Ý nghĩa |
+|---|---|---|
+| EXPO_PUBLIC_APP_ENV | development | development / staging / production |
+| EXPO_PUBLIC_AUTH_MODE | mock | Đợt này chỉ hỗ trợ mock; giá trị khác báo lỗi |
+| EXPO_PUBLIC_API_URL | Trống | URL API HTTP(S), chỉ cần khi gọi API helper |
 
-### Environment Setup
+Không hardcode endpoint theo `__DEV__`. Đặt URL đúng môi trường trong `.env.local`/build environment; chọn staging không tự tạo endpoint. Thiết bị thật phải truy cập được IP LAN hoặc hostname của máy chủ, không dùng localhost để trỏ về máy development. Biến `EXPO_PUBLIC_*` nằm trong bundle, không dùng cho secret.
 
-Use a Node.js version supported by the selected Expo SDK and React Native packages. For remote push, use a **native development build on a physical device**, with FCM/APNs credentials configured; Expo Go is not a substitute for testing this flow.
+Mock không gọi backend. API URL trống vẫn cho phép app khởi động; gọi API khi chưa cấu hình trả lỗi có hướng dẫn. Socket là helper tùy chọn, không thuộc config bootstrap; lỗi/missing socket URL không ảnh hưởng app không dùng realtime. Lỗi core env lúc khởi động có fallback và retry sau khi sửa cấu hình/reload.
 
-For push notifications, merge your EAS project ID into the existing `expo` object in `app.json`:
+## Auth demo
+
+- Login nhận email hợp lệ và password không rỗng; không xác minh password với máy chủ.
+- Register nhận tên, email, password tối thiểu 8 ký tự và xác nhận trùng; thành công quay về login, không tự đăng nhập.
+- Forgot không gửi email/SMS. Sau thông báo trung tính, dùng nút tiếp tục reset demo.
+- Reset dùng ticket trong bộ nhớ, hết hạn sau 10 phút, dùng một lần, ticket mới thay ticket cũ và restart app làm mất ticket. Query email không xác định tài khoản reset; chỉ ticket service quyết định.
+- Register/reset không lưu tài khoản hoặc password và không thay đổi điều kiện login demo. Không dùng mock như một cơ chế bảo mật.
+- Development có picker success / invalid-credentials / network-error / session-expired. Reset scenario để trở về success; bản production không có picker, mock vẫn được ghi rõ.
+
+Session lưu một envelope v1 trong SecureStore (`auth_session_v1`), có user/token và expiresAt (mặc định một giờ). Kiểm tra hạn khi restore, request có auth và foreground. Session cũ từ access_token/refresh_token/stored_user bị xóa và yêu cầu login lại một lần.
+
+Lỗi storage không bị bỏ qua. Login chỉ thành công khi lưu được phiên. Logout/401/hết hạn xóa user trong bộ nhớ và hủy kết quả auth cũ. Feature có dùng socket tự disconnect khi phiên thay đổi hoặc kết thúc. Khi native storage không xóa được, app báo retry; dữ liệu có thể vẫn còn trên thiết bị và được đọc lại sau restart nếu không retry thành công.
+
+## Routes và cấu trúc
+
+| URL | Truy cập |
+|---|---|
+| / | Entry chuyển tới login hoặc home sau bootstrap |
+| /login, /register, /forgot-password, /reset-password | Chưa đăng nhập |
+| /home, /account | Đã đăng nhập |
+| /demo, /demo/components, /demo/explore, /demo/finance-home, /demo/integrations | Đã đăng nhập |
+| /modal | Đã đăng nhập, presentation modal |
+
+Deep link private lúc signed out đưa về login; login bình thường về home, không ghi nhớ destination. Notification allowlist có pending destination riêng. Logout loại bỏ private routes khỏi lịch sử điều hướng.
+
+```text
+app/                    Route/layout mỏng
+features/auth/          Forms, schemas, mock services, provider, session lifecycle
+features/demo/          Home/account, gallery và integrations demo
+components/ui/         Components dùng chung
+context/               Notification provider
+hooks/                 Hooks dùng chung
+lib/                   API, errors, socket, notification navigation
+models/common/         ApiResponse và pagination
+constants/             Environment configuration
+docs/verification/     Checklist và trạng thái bằng chứng
+```
+
+Chỉ tạo folder khi có implementation. Code riêng feature colocate tại feature. Để bắt đầu app mới, thay demo feature/route bằng nghiệp vụ của bạn, giữ auth/shared components cần dùng; script reset cũ đã được bỏ vì có thể xóa nhầm các nền tảng dùng chung.
+
+## API và phiên
+
+```typescript
+import api from '@/lib/api';
+import type { ApiResponse } from '@/models/common';
+
+// Mặc định yêu cầu phiên hiện tại. Đây là ví dụ cho backend của app bạn.
+const result = await api.get<ApiResponse<MyData>>('/my-resource', { signal });
+// Public request không gắn bearer. authMode tránh trùng option Basic auth của Axios.
+const publicResult = await api.get<ApiResponse<MyData>>('/public-resource', { authMode: 'none' });
+```
+
+Helper chỉ cho phép origin API đã cấu hình, timeout 15 giây, hỗ trợ AbortSignal và reject AppError với kind rõ ràng. Không tự retry POST. 401 của public request hoặc phiên cũ không xóa phiên mới; network/timeout/403 không logout. Không có refresh-token endpoint cho tới khi app cung cấp contract backend thật.
+
+`useAuth()` expose user, isAuthenticated, isBootstrapping, sessionError, cleanupError, login, logout, refreshUser, retryRestore, retryCleanup. `login()` trả ApiResponse<User>, không còn boolean; form dùng RHF isSubmitting. Chỉ session manager ghi/xóa phiên; tokenService còn getters/clear compatibility, không còn setters token/user riêng lẻ. ApiResponse canonical ở models/common, success bắt buộc data; lib/types chỉ re-export.
+
+## UI dùng chung
+
+- `Input`: className cho outer container, inputClassName cho TextInput; hỗ trợ ref và compose onFocus/onBlur với state nội bộ.
+- `ScreenWrapper`: mặc định scroll keyboardShouldPersistTaps=handled, có keyboardVerticalOffset và cờ insets. Màn tabs không cộng lại bottom inset do tab bar đã sở hữu phần đó.
+- `SafeArea`: edges và màu nền bất kỳ qua style; caller style được merge sau mặc định.
+- `Typography`: scale theo chiều rộng, giới hạn 0.9–1.15 để tablet không phóng chữ quá lớn; vẫn giữ font scaling hệ thống; explicit style có thể override fontSize.
+- `Modal`: cuộn nội dung dài, keyboard avoidance, bottom inset, Android Back và nhãn nút đóng.
+- `ErrorState` dùng cho async errors có retry; AppErrorBoundary bắt render error. Retry render không đảm bảo side effect trước đó được hoàn tất hoặc hoàn tác.
+
+UI đang light-only. Đổi native config/theme có thể cần rebuild development client. Không có global isLoading/isOnline giả cho mọi request; mỗi feature sở hữu trạng thái thao tác của mình.
+
+## Notifications
+
+Startup chỉ đọc quyền và đăng ký listeners, không xin quyền hoặc token. Vào `/demo/integrations` để chủ động xin quyền/đăng ký; denied có hướng dẫn Settings. Token được ẩn trên UI, không log hoặc gửi backend.
+
+Merge EAS project ID của bạn vào expo config:
 
 ```json
-{
-  "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "your-eas-project-id"
-      }
-    }
-  }
-}
+{ "expo": { "extra": { "eas": { "projectId": "YOUR_EAS_PROJECT_ID" } } } }
 ```
 
-The notification hook skips native push registration on web. Missing project configuration or token request failures do not produce a token; token failures preserve the permission status already obtained. Registration failures are logged without exposing tokens. Notification-tap navigation remains an application-specific TODO.
+Đây chỉ là đoạn cấu hình cần merge, không thay toàn bộ app.json. Chưa cấu hình bundle identifier/package, native credentials hoặc EAS project cho một app phát hành cụ thể. Thiếu config/thiết bị/network có thông báo và retry, không tạo token giả.
 
-### Verification after updating dependencies
+Notification data chỉ nhận `{ "screen": "home" }` hoặc `{ "screen": "account" }`; URL/path tùy ý bị bỏ qua. Tap foreground/cold start đợi router và session sẵn sàng; signed out giữ một pending destination cho sau login. Logout bỏ pending và token local. Timestamp native được chuẩn hóa giây/mili giây; notification có thời điểm nhận trước lần logout bị bỏ qua kể cả callback/tap tới sau đó. Dedup sống trong process; response cũ được clear best-effort, không hứa exactly-once xuyên process khi native clear thất bại. Backend token registration/unregistration chưa được triển khai.
 
-The installation completed with npm blocking the `unrs-resolver@1.11.1` postinstall script under its install-script approval policy. Do not disable that policy globally. Review the package and script with `npm install-scripts ls`; if you trust it, explicitly approve it with `npm install-scripts approve unrs-resolver` and follow npm's instructions. Its effect on lint tooling has not been verified.
+## Socket tùy chọn
 
-Run these checks yourself after installing dependencies:
+App mặc định không import socket, không tạo client và không subscribe phiên cho socket. Chỉ feature cần realtime mới import `createSocketService` từ `@/lib/socket`. Helper không biết AuthProvider/authMode và hỗ trợ cả public connection lẫn token do feature cung cấp.
 
-```bash
-npm ls
-npx expo install --check
-npx expo-doctor@latest
+```typescript
+import { createSocketService } from '@/lib/socket';
+
+// Đặt tại feature sở hữu realtime, không đưa vào root layout mặc định.
+const realtime = createSocketService({
+  url: 'https://YOUR_SOCKET_SERVER',
+  getAccessToken: async () => /* lấy token hợp lệ từ auth của feature */ null,
+});
+
+// Chỉ gọi theo lifecycle thực tế của feature; catch AppError để hiển thị lỗi.
+const socket = await realtime.connect();
+socket.on('feature-event', handler);
+// Khi logout, đổi tài khoản/token hoặc feature unmount:
+realtime.disconnect();
+```
+
+Ví dụ trên là khung tích hợp: thay URL, callback và handler của feature; callback null cố ý từ chối kết nối, không gửi token mock ra server. Public socket bỏ `getAccessToken`. Có thể bỏ option url và tự thêm `EXPO_PUBLIC_SOCKET_URL` vào `.env.local`; biến này chỉ được đọc/validate khi connect, không nằm trong env mẫu bắt buộc.
+
+Mỗi factory tạo service riêng, chia sẻ pending connect bên trong service đó. `connect()` resolve khi client đã được tạo/khởi động, không đảm bảo handshake thành công; lắng nghe `connect`/`connect_error` từ client để theo dõi kết nối. Reconnect dùng instance/token hiện tại; khi token đổi phải disconnect rồi connect lại để đọc token mới. Feature tự subscribe trạng thái auth khi cần và bỏ subscription khi unmount. Helper không tự bật theo mock/real auth.
+
+Dependency `socket.io-client` vẫn đi kèm helper mẫu. App không dùng realtime không cần wiring/config socket; nếu muốn bỏ cả dependency, xóa `lib/socket.ts`/`lib/socket.test.ts` rồi tự chạy `npm uninstall socket.io-client`. Không có native setup socket bắt buộc cho app mặc định.
+
+## Kiểm tra do developer chạy
+
+```powershell
 npm run typecheck
 npm run lint
+npm run test:unit
+npx expo install --check
+npx expo-doctor@latest
 npm audit
+npx expo start --clear
 ```
 
-Expect no invalid/missing dependencies, SDK version mismatches, or type/lint regressions. Review audit findings individually; do not use `npm audit fix --force` to bypass compatibility constraints. These checks do not prove runtime compatibility.
+Test dùng jest-expo 57/Jest 29 và RNTL 13 phù hợp Router SDK 57; react-test-renderer pin cùng phiên bản React. Không nâng riêng công cụ test sang hướng dẫn SDK 58 mà chưa nâng toàn bộ SDK. Không dùng audit fix --force.
 
-Then start the app with `npx expo start --clear` (or `npx expo start --dev-client` for your rebuilt development client) and check:
+Ngày 2026-11-01, người dùng đã cho phép chạy verification: typecheck/lint, 19 suites/48 tests, Expo checks và Hermes export Android/iOS đã pass. Audit còn 64 findings (0 critical, 12 high); chưa có APK/AAB/IPA hay kiểm thử thiết bị. Xem [kết quả thực tế](docs/verification/2026-11-01-verification-results.md) và [checklist chi tiết](docs/verification/mobile-base-stability.md). Repo không có CI tự chạy verify theo quy tắc hiện tại.
 
-- **Android/iOS/web:** tabs, modal open/close, login validation, successful/failed login against your configured backend, session restoration and logout.
-- **UI:** NativeWind colors and spacing, icons/fonts, keyboard avoidance, safe-area insets, scrolling and Reanimated transitions.
-- **Physical Android/iOS development builds:** grant/deny notification permission, retrieve a token with valid EAS credentials, receive a foreground notification, and handle missing project configuration or network failure without an unhandled rejection.
-- **Web:** startup must not request native notification permissions or register native push listeners.
+## Thay đổi và quy tắc
 
-No automated test suite is configured. Platform smoke tests and native builds are required before claiming production readiness for this upgrade.
-
----
-
-## 📦 Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start Expo development server |
-| `npm run android` | Open on Android |
-| `npm run ios` | Open on iOS |
-| `npm run web` | Open in browser |
-| `npm run lint` | Run ESLint |
-| `npm run typecheck` | Check TypeScript without emitting files |
-| `npm run reset-project` | Reset to blank starter |
-
----
-
-## 📖 Resources
-
-- [Expo Documentation](https://docs.expo.dev/)
-- [NativeWind](https://www.nativewind.dev/)
-- [react-native-size-matters](https://github.com/nirsky/react-native-size-matters)
-- [expo-notifications Guide](https://docs.expo.dev/push-notifications/overview/)
-
+Xem [CHANGELOG.md](CHANGELOG.md) và [AGENTS.md](AGENTS.md). Mỗi đợt thêm tính năng, sửa lỗi hoặc thay đổi hành vi/config/public interface phải cập nhật Unreleased trong cùng đợt. Không tự commit, bump version hoặc tạo release.
